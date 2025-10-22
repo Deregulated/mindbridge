@@ -1,0 +1,38 @@
+<div class="chatbot-container">
+  <button class="chatbot-toggle" (click)="toggleChat()">
+    <span class="chat-icon">💬</span>
+  </button>
+
+  <div class="chatbot-window" *ngIf="isOpen">
+    <div class="chat-header">
+      <h3>MindBridge Assistant</h3>
+      <button class="close-btn" (click)="toggleChat()">×</button>
+    </div>
+
+    <div class="chat-messages">
+      <div *ngFor="let message of messages" 
+           [class.user-message]="message.sender === 'user'"
+           [class.bot-message]="message.sender === 'bot'"
+           [class.suggestion]="message.type === 'suggestion'"
+           class="message">
+        <p>{{ message.text }}</p>
+        <span class="timestamp">{{ message.timestamp | date:'shortTime' }}</span>
+      </div>
+      <div *ngIf="isLoading" class="loading">Thinking...</div>
+    </div>
+
+    <div class="chat-input">
+      <form [formGroup]="chatForm" (ngSubmit)="sendMessage()">
+        <input 
+          type="text" 
+          formControlName="message" 
+          placeholder="Type your message..." 
+          class="message-input"
+        >
+        <button type="submit" [disabled]="!chatForm.valid || isLoading" class="send-btn">
+          Send
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

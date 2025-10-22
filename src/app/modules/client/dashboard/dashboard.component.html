@@ -1,0 +1,97 @@
+<div class="dashboard-container">
+  <!-- Header -->
+  <mat-toolbar color="primary" class="dashboard-header">
+    <div class="header-content">
+      <div class="header-info">
+        <h1>Welcome back, {{ userName }}</h1>
+        <p>Here's your mental wellness overview</p>
+      </div>
+      <div class="header-actions">
+        <button mat-raised-button color="accent">
+          <mat-icon>video_call</mat-icon>
+          New Session
+        </button>
+        <button mat-icon-button [matBadge]="notificationCount" matBadgeColor="warn">
+          <mat-icon>notifications</mat-icon>
+        </button>
+      </div>
+    </div>
+  </mat-toolbar>
+
+  <!-- Main Content -->
+  <main class="dashboard-main">
+    <div class="container">
+      <!-- Stats Cards -->
+      <div class="stats-grid">
+        <mat-card *ngFor="let stat of stats" class="stat-card">
+          <mat-card-content>
+            <div class="stat-content">
+              <mat-icon class="stat-icon">{{ stat.icon }}</mat-icon>
+              <div class="stat-info">
+                <span class="stat-value">{{ stat.value }}</span>
+                <span class="stat-label">{{ stat.label }}</span>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- Two Column Layout -->
+      <div class="content-grid">
+        <!-- Left Column -->
+        <div class="left-column">
+          <!-- Upcoming Sessions -->
+          <mat-card class="section-card">
+            <mat-card-header>
+              <mat-card-title>
+                <mat-icon>schedule</mat-icon>
+                Upcoming Sessions
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="sessions-list">
+                <div *ngFor="let session of upcomingSessions" class="session-item">
+                  <div class="session-time">{{ session.time }}</div>
+                  <div class="session-details">
+                    <h4>{{ session.expert }}</h4>
+                    <p>{{ session.type }}</p>
+                  </div>
+                  <button mat-stroked-button color="primary">Join</button>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+        <!-- Right Column -->
+        <div class="right-column">
+          <!-- Quick Actions -->
+          <mat-card class="section-card">
+            <mat-card-header>
+              <mat-card-title>
+                <mat-icon>flash_on</mat-icon>
+                Quick Actions
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="actions-grid">
+                <button mat-stroked-button color="primary" class="action-btn">
+                  <mat-icon>self_improvement</mat-icon>
+                  Resources
+                </button>
+                <button mat-stroked-button color="primary" class="action-btn">
+                  <mat-icon>book</mat-icon>
+                  Journal
+                </button>
+                <button mat-stroked-button color="primary" class="action-btn">
+                  <mat-icon>psychology</mat-icon>
+                  Find Expert
+                </button>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

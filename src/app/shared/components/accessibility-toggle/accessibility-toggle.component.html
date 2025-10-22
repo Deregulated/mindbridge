@@ -1,0 +1,48 @@
+<div class="accessibility-toggle">
+  <button 
+    class="toggle-button"
+    (click)="isOpen = !isOpen"
+    aria-label="Accessibility settings"
+  >
+    <span class="icon">♿</span>
+  </button>
+
+  <div class="accessibility-panel" *ngIf="isOpen">
+    <h3>Accessibility Settings</h3>
+    
+    <div class="setting-group">
+      <label>
+        <input 
+          type="checkbox" 
+          [checked]="preferences.highContrast"
+          (change)="toggleHighContrast()"
+        >
+        High Contrast
+      </label>
+    </div>
+
+    <div class="setting-group">
+      <label>Font Size:</label>
+      <div class="font-size-buttons">
+        <button 
+          *ngFor="let size of fontSizes"
+          [class.active]="preferences.fontSize === size"
+          (click)="updateFontSize(size)"
+        >
+          {{ size }}
+        </button>
+      </div>
+    </div>
+
+    <div class="setting-group">
+      <label>
+        <input 
+          type="checkbox" 
+          [checked]="preferences.reducedMotion"
+          (change)="toggleReducedMotion()"
+        >
+        Reduced Motion
+      </label>
+    </div>
+  </div>
+</div>

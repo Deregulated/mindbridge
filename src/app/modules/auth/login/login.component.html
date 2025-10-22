@@ -1,0 +1,151 @@
+<div class="login-container">
+  <div class="login-background">
+    <div class="background-shapes">
+      <div class="shape shape-1"></div>
+      <div class="shape shape-2"></div>
+      <div class="shape shape-3"></div>
+    </div>
+  </div>
+
+  <div class="login-content">
+    <!-- Logo Section -->
+    <div class="logo-section">
+      <div class="logo">
+        <div class="logo-icon">🧠</div>
+        <h1 class="logo-text">MindBridge</h1>
+      </div>
+      <p class="tagline">Your mental wellness journey starts here</p>
+    </div>
+
+    <!-- Login Card -->
+    <mat-card class="login-card">
+      <mat-card-header>
+        <mat-card-title class="card-title">Welcome Back</mat-card-title>
+        <mat-card-subtitle class="card-subtitle">
+          Sign in to continue your mental health journey
+        </mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <!-- Role Selection Tabs -->
+        <mat-tab-group 
+          [(selectedIndex)]="selectedTab" 
+          (selectedIndexChange)="onTabChange($event)"
+          class="role-tabs"
+          animationDuration="300ms">
+          
+          <mat-tab *ngFor="let tab of tabs; let i = index">
+            <ng-template mat-tab-label>
+              <mat-icon class="tab-icon">{{ getTabIcon(i) }}</mat-icon>
+              {{ isMobile ? '' : tab.label }}
+            </ng-template>
+
+            <!-- Login Form -->
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+              <!-- Email Field -->
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Email Address</mat-label>
+                <input 
+                  matInput 
+                  formControlName="email" 
+                  type="email" 
+                  placeholder="your@email.com"
+                  autocomplete="email">
+                <mat-icon matSuffix>email</mat-icon>
+                <mat-error *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+                  {{ getEmailErrorMessage() }}
+                </mat-error>
+              </mat-form-field>
+
+              <!-- Password Field -->
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Password</mat-label>
+                <input 
+                  matInput 
+                  formControlName="password" 
+                  [type]="hidePassword ? 'password' : 'text'"
+                  placeholder="Enter your password"
+                  autocomplete="current-password">
+                <button 
+                  mat-icon-button 
+                  matSuffix 
+                  type="button"
+                  (click)="togglePasswordVisibility()"
+                  [attr.aria-label]="hidePassword ? 'Show password' : 'Hide password'">
+                  <mat-icon>{{ hidePassword ? 'visibility' : 'visibility_off' }}</mat-icon>
+                </button>
+                <mat-error *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+                  {{ getPasswordErrorMessage() }}
+                </mat-error>
+              </mat-form-field>
+
+              <!-- Remember Me & Forgot Password -->
+              <div class="form-options">
+                <mat-checkbox formControlName="rememberMe" color="primary">
+                  Remember me
+                </mat-checkbox>
+                <a class="forgot-password" routerLink="/auth/forgot-password">
+                  Forgot password?
+                </a>
+              </div>
+
+              <!-- Submit Button -->
+              <button 
+                mat-raised-button 
+                color="primary" 
+                type="submit" 
+                class="login-button full-width"
+                [disabled]="isLoading"
+                [class.loading]="isLoading">
+                <mat-spinner *ngIf="isLoading" diameter="20" class="button-spinner"></mat-spinner>
+                <span *ngIf="!isLoading">
+                  Sign In as {{ tabs[selectedTab].label.split(' ')[0] }}
+                </span>
+                <span *ngIf="isLoading">Signing In...</span>
+              </button>
+            </form>
+          </mat-tab>
+        </mat-tab-group>
+
+        <!-- Demo Login Section (for development) -->
+        <div class="demo-section" *ngIf="!isLoading">
+          <div class="demo-divider">
+            <span>Quick Demo Access</span>
+          </div>
+          <div class="demo-buttons">
+            <button 
+              mat-stroked-button 
+              color="primary" 
+              (click)="quickLogin('client')"
+              class="demo-button">
+              <mat-icon>person</mat-icon>
+              Client Demo
+            </button>
+            <button 
+              mat-stroked-button 
+              color="accent" 
+              (click)="quickLogin('expert')"
+              class="demo-button">
+              <mat-icon>medical_services</mat-icon>
+              Expert Demo
+            </button>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Register Link -->
+    <div class="register-section">
+      <p class="register-text">
+        New to MindBridge? 
+        <a routerLink="/auth/register" class="register-link">Create an account</a>
+      </p>
+    </div>
+
+    <!-- Security Notice -->
+    <div class="security-notice">
+      <mat-icon class="security-icon">security</mat-icon>
+      <span>Your privacy and security are our top priority. All sessions are confidential and encrypted.</span>
+    </div>
+  </div>
+</div>

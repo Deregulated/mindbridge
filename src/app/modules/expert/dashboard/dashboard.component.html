@@ -1,0 +1,210 @@
+<div class="dashboard-container">
+  <!-- Header -->
+  <mat-toolbar color="primary" class="dashboard-header">
+    <div class="header-content">
+      <div class="header-info">
+        <h1>Welcome, Dr. {{ expertName }}</h1>
+        <p>Your professional dashboard</p>
+      </div>
+      <div class="header-actions">
+        <button mat-raised-button color="accent">
+          <mat-icon>add</mat-icon>
+          New Availability
+        </button>
+        <button mat-icon-button [matBadge]="notificationCount" matBadgeColor="warn">
+          <mat-icon>notifications</mat-icon>
+        </button>
+        <div class="expert-avatar">
+          {{ expertInitials }}
+        </div>
+      </div>
+    </div>
+  </mat-toolbar>
+
+  <!-- Main Content -->
+  <main class="dashboard-main">
+    <div class="container">
+      <!-- Quick Stats -->
+      <div class="stats-grid">
+        <mat-card *ngFor="let stat of stats" class="stat-card">
+          <mat-card-content>
+            <div class="stat-content">
+              <mat-icon class="stat-icon">{{ stat.icon }}</mat-icon>
+              <div class="stat-info">
+                <span class="stat-value">{{ stat.value }}</span>
+                <span class="stat-label">{{ stat.label }}</span>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- Two Column Layout -->
+      <div class="content-grid">
+        <!-- Left Column -->
+        <div class="left-column">
+          <!-- Today's Schedule -->
+          <mat-card class="section-card">
+            <mat-card-header>
+              <mat-card-title>
+                <mat-icon>schedule</mat-icon>
+                Today's Schedule
+              </mat-card-title>
+              <button mat-button color="primary">View Calendar</button>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="schedule-list">
+                <div *ngFor="let session of todaysSessions" class="schedule-item" [class.upcoming]="session.status === 'upcoming'">
+                  <div class="session-time">
+                    <span class="time">{{ session.time }}</span>
+                    <span class="duration">50 min</span>
+                  </div>
+                  <div class="session-details">
+                    <h4>{{ session.client }}</h4>
+                    <p>{{ session.type }}</p>
+                  </div>
+                  <div class="session-status">
+                    <span class="status-badge" [class]="session.status">
+                      {{ session.status }}
+                    </span>
+                    <button mat-stroked-button color="primary" size="small" *ngIf="session.status === 'upcoming'">
+                      Start
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <!-- Recent Clients -->
+          <mat-card class="section-card">
+            <mat-card-header>
+              <mat-card-title>
+                <mat-icon>group</mat-icon>
+                Recent Clients
+              </mat-card-title>
+              <button mat-button color="primary">View All</button>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="clients-list">
+                <div *ngFor="let client of recentClients" class="client-item">
+                  <div class="client-avatar">
+                    {{ client.avatar }}
+                  </div>
+                  <div class="client-info">
+                    <h4>{{ client.name }}</h4>
+                    <p>Last session: {{ client.lastSession }}</p>
+                  </div>
+                  <div class="client-actions">
+                    <button mat-icon-button>
+                      <mat-icon>message</mat-icon>
+                    </button>
+                    <button mat-icon-button>
+                      <mat-icon>event</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+        <!-- Right Column -->
+        <div class="right-column">
+          <!-- Quick Actions -->
+          <mat-card class="section-card">
+            <mat-card-header>
+              <mat-card-title>
+                <mat-icon>flash_on</mat-icon>
+                Quick Actions
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="actions-grid">
+                <button mat-stroked-button color="primary" class="action-btn" (click)="manageAvailability()">
+                  <mat-icon>event_available</mat-icon>
+                  <span>Manage Availability</span>
+                </button>
+                <button mat-stroked-button color="primary" class="action-btn" (click)="viewMessages()">
+                  <mat-icon>chat</mat-icon>
+                  <span>Messages</span>
+                </button>
+                <button mat-stroked-button color="primary" class="action-btn" (click)="addNotes()">
+                  <mat-icon>note_add</mat-icon>
+                  <span>Session Notes</span>
+                </button>
+                <button mat-stroked-button color="primary" class="action-btn" (click)="viewResources()">
+                  <mat-icon>library_books</mat-icon>
+                  <span>Resources</span>
+                </button>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <!-- Pending Requests -->
+          <mat-card class="section-card">
+            <mat-card-header>
+              <mat-card-title>
+                <mat-icon>pending_actions</mat-icon>
+                Pending Requests
+                <span class="badge">{{ pendingRequests.length }}</span>
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="requests-list">
+                <div *ngFor="let request of pendingRequests" class="request-item">
+                  <div class="request-info">
+                    <h4>{{ request.clientName }}</h4>
+                    <p>Requested: {{ request.requestedDate }} • {{ request.type }}</p>
+                  </div>
+                  <div class="request-actions">
+                    <button mat-icon-button color="primary" (click)="acceptRequest(request)">
+                      <mat-icon>check</mat-icon>
+                    </button>
+                    <button mat-icon-button color="warn" (click)="declineRequest(request)">
+                      <mat-icon>close</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <!-- Session Analytics -->
+          <mat-card class="section-card">
+            <mat-card-header>
+              <mat-card-title>
+                <mat-icon>analytics</mat-icon>
+                Session Analytics
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="analytics-chart">
+                <!-- Simple chart without Chart.js -->
+                <div class="simple-chart">
+                  <div class="chart-bars">
+                    <div *ngFor="let value of sessionData.data; let i = index" class="chart-bar">
+                      <div class="bar" [style.height]="(value / 25) * 100 + '%'"></div>
+                      <span class="bar-label">{{ sessionData.labels[i] }}</span>
+                      <span class="bar-value">{{ value }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="analytics-stats">
+                <div class="analytics-stat">
+                  <span class="stat-value">{{ sessionGrowth }}%</span>
+                  <span class="stat-label">Session Growth</span>
+                </div>
+                <div class="analytics-stat">
+                  <span class="stat-value">{{ retentionRate }}%</span>
+                  <span class="stat-label">Client Retention</span>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

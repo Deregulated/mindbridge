@@ -1,0 +1,85 @@
+.accessibility-toggle {
+  position: relative;
+}
+
+.toggle-button {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background: var(--accent-color);
+  }
+}
+
+.accessibility-panel {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: var(--background-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 1rem;
+  box-shadow: var(--shadow);
+  min-width: 250px;
+  z-index: 1000;
+  margin-top: 0.5rem;
+
+  h3 {
+    margin: 0 0 1rem 0;
+    color: var(--text-primary);
+    font-size: 1.1rem;
+  }
+}
+
+.setting-group {
+  margin-bottom: 1rem;
+
+  label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    color: var(--text-primary);
+  }
+
+  input[type="checkbox"] {
+    margin: 0;
+  }
+}
+
+.font-size-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+
+  button {
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    background: var(--background-secondary);
+    cursor: pointer;
+    border-radius: var(--border-radius);
+    transition: all 0.3s ease;
+    font-size: 0.875rem;
+
+    &.active {
+      background: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+    }
+
+    &:hover:not(.active) {
+      background: var(--background-accent);
+    }
+  }
+}

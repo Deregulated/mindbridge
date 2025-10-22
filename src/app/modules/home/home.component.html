@@ -1,0 +1,188 @@
+<div class="home-container">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-background">
+      <div class="hero-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+      </div>
+    </div>
+    
+    <div class="hero-content">
+      <div class="container">
+        <div class="hero-text">
+          <h1 class="hero-title">
+            Your Mental Wellness
+            <span class="highlight">Journey Starts Here</span>
+          </h1>
+          <p class="hero-subtitle">
+            Connect with licensed mental health professionals in a safe, secure, and supportive environment. 
+            Take the first step towards better mental health today.
+          </p>
+          <div class="hero-actions">
+            <button 
+              mat-raised-button 
+              color="primary" 
+              routerLink="/auth/register"
+              class="cta-button primary">
+              <mat-icon>rocket_launch</mat-icon>
+              Get Started
+            </button>
+            <button 
+              mat-stroked-button 
+              color="primary" 
+              routerLink="/auth/login"
+              class="cta-button secondary">
+              <mat-icon>login</mat-icon>
+              Sign In
+            </button>
+          </div>
+        </div>
+        
+        <div class="hero-visual">
+          <div class="floating-cards">
+            <div class="card card-1">
+              <mat-icon>psychology</mat-icon>
+              <span>Professional Support</span>
+            </div>
+            <div class="card card-2">
+              <mat-icon>security</mat-icon>
+              <span>100% Confidential</span>
+            </div>
+            <div class="card card-3">
+              <mat-icon>schedule</mat-icon>
+              <span>Available 24/7</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features-section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Why Choose MindBridge?</h2>
+        <p>We're committed to making mental health support accessible, affordable, and effective for everyone.</p>
+      </div>
+      
+      <div class="features-grid">
+        <mat-card *ngFor="let feature of features" class="feature-card">
+          <div class="feature-icon">
+            <mat-icon>{{ feature.icon }}</mat-icon>
+          </div>
+          <mat-card-content>
+            <h3>{{ feature.title }}</h3>
+            <p>{{ feature.description }}</p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section class="process-section">
+    <div class="container">
+      <div class="section-header">
+        <h2>How MindBridge Works</h2>
+        <p>Getting support is simple and straightforward</p>
+      </div>
+      
+      <div class="process-steps">
+        <div class="step">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h3>Create Your Account</h3>
+            <p>Sign up as a client or mental health professional in just a few minutes.</p>
+          </div>
+        </div>
+        
+        <div class="step">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h3>Find Your Match</h3>
+            <p>Browse through verified experts and find the right professional for your needs.</p>
+          </div>
+        </div>
+        
+        <div class="step">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h3>Start Your Session</h3>
+            <p>Connect securely through video, audio, or chat sessions at your convenience.</p>
+          </div>
+        </div>
+        
+        <div class="step">
+          <div class="step-number">4</div>
+          <div class="step-content">
+            <h3>Continue Your Journey</h3>
+            <p>Track your progress and maintain consistent support with regular sessions.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials Section -->
+  <section class="testimonials-section">
+    <div class="container">
+      <div class="section-header">
+        <h2>What Our Community Says</h2>
+        <p>Real stories from real people who found support through MindBridge</p>
+      </div>
+      
+      <div class="testimonials-grid">
+        <mat-card *ngFor="let testimonial of testimonials" class="testimonial-card">
+          <mat-card-content>
+            <div class="testimonial-content">
+              "{{ testimonial.content }}"
+            </div>
+            <div class="testimonial-author">
+              <div class="author-avatar">{{ testimonial.avatar }}</div>
+              <div class="author-info">
+                <strong>{{ testimonial.name }}</strong>
+                <span>{{ testimonial.role }}</span>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-content">
+        <h2>Ready to Start Your Mental Wellness Journey?</h2>
+        <p>Join thousands of others who have found support and healing through MindBridge.</p>
+        <div class="cta-actions">
+          <button 
+            mat-raised-button 
+            color="primary" 
+            routerLink="/auth/register"
+            class="cta-button large">
+            Begin Your Journey Today
+          </button>
+        </div>
+        <div class="trust-indicators">
+          <div class="trust-item">
+            <mat-icon>verified</mat-icon>
+            <span>100% Secure & Confidential</span>
+          </div>
+          <div class="trust-item">
+            <mat-icon>groups</mat-icon>
+            <span>50+ Licensed Experts</span>
+          </div>
+          <div class="trust-item">
+            <mat-icon>favorite</mat-icon>
+            <span>98% Client Satisfaction</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
