@@ -19,6 +19,12 @@ export const routes: Routes = [
     loadChildren: () => import('./modules/expert/expert.routes').then(m => m.EXPERT_ROUTES)
   },
   
+  // About route
+  {
+    path: 'about',
+    loadChildren: () => import('./modules/about/about.routes').then(m => m.aboutRoutes)
+  },
+  
   // Home route
   {
     path: '',

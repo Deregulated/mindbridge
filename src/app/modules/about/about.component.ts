@@ -10,54 +10,33 @@ import { RouterModule } from '@angular/router';
   styleUrls: ['./about.component.scss']
 })
 export class AboutComponent {
-  team = [
+  features = [
     {
-      name: 'John Doe',
-      role: 'Founder & CEO',
-      bio: 'John has over 10 years of experience in the tech industry and is passionate about connecting people with knowledge.',
-      avatar: '👨‍💼'
+      icon: '💬',
+      title: 'Expert Sessions',
+      description: 'Connect with verified experts for personalized guidance and mentorship.'
     },
     {
-      name: 'Jane Smith',
-      role: 'CTO',
-      bio: 'Jane leads our technical team with expertise in scalable software architecture and user experience design.',
-      avatar: '👩‍💻'
+      icon: '🎯',
+      title: 'Goal-Oriented',
+      description: 'Set clear objectives and track your progress with structured sessions.'
     },
     {
-      name: 'Mike Johnson',
-      role: 'Head of Community',
-      bio: 'Mike ensures our community of clients and experts thrives through excellent support and engagement.',
-      avatar: '👨‍🎓'
+      icon: '🔄',
+      title: 'Flexible Scheduling',
+      description: 'Book sessions at your convenience with our easy scheduling system.'
+    },
+    {
+      icon: '🔒',
+      title: 'Secure & Private',
+      description: 'Your sessions and data are protected with enterprise-grade security.'
     }
   ];
 
-  milestones = [
-    { year: '2020', event: 'MindBridge founded with a vision to democratize access to expert knowledge' },
-    { year: '2021', event: 'Launched our platform with 100+ experts and 1000+ clients' },
-    { year: '2022', event: 'Expanded to 10 new countries and introduced mobile apps' },
-    { year: '2023', event: 'Reached 10,000+ successful sessions and 500+ experts' }
-  ];
-
-  values = [
-    {
-      icon: '🌍',
-      title: 'Accessibility',
-      description: 'We strive to make expert guidance available to everyone, regardless of location or background.'
-    },
-    {
-      icon: '⭐',
-      title: 'Quality',
-      description: 'Every expert on our platform is thoroughly vetted to ensure the highest standard of service.'
-    },
-    {
-      icon: '💡',
-      title: 'Innovation',
-      description: 'We continuously improve our platform to provide the best experience for both clients and experts.'
-    },
-    {
-      icon: '🤝',
-      title: 'Community',
-      description: 'We foster a supportive environment where knowledge sharing and growth are celebrated.'
-    }
+  stats = [
+    { number: '500+', label: 'Active Experts' },
+    { number: '10K+', label: 'Sessions Completed' },
+    { number: '95%', label: 'Success Rate' },
+    { number: '24/7', label: 'Support Available' }
   ];
 }

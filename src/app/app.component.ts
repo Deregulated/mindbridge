@@ -4,17 +4,19 @@ import { RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
 import { AccessibilityComponent } from './shared/components/accessibility/accessibility.component';
 import { ChatbotComponent } from './shared/components/chatbot/chatbot.component';
+import { FooterComponent } from "./shared/components/footer/footer.component";
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
-    CommonModule, 
+    CommonModule,
     RouterOutlet,
     NavbarComponent,
     AccessibilityComponent,
-    ChatbotComponent
-  ],
+    ChatbotComponent,
+    FooterComponent
+],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
