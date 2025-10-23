@@ -12,22 +12,22 @@ import { RouterModule } from '@angular/router';
 export class AboutComponent {
   features = [
     {
-      icon: '💬',
+      icon: 'fas fa-comments',  // Just the class names
       title: 'Expert Sessions',
       description: 'Connect with verified experts for personalized guidance and mentorship.'
     },
     {
-      icon: '🎯',
-      title: 'Goal-Oriented',
+      icon: 'fas fa-bullseye',
+      title: 'Goal-Oriented', 
       description: 'Set clear objectives and track your progress with structured sessions.'
     },
     {
-      icon: '🔄',
+      icon: 'fas fa-sync',
       title: 'Flexible Scheduling',
       description: 'Book sessions at your convenience with our easy scheduling system.'
     },
     {
-      icon: '🔒',
+      icon: 'fas fa-key',
       title: 'Secure & Private',
       description: 'Your sessions and data are protected with enterprise-grade security.'
     }

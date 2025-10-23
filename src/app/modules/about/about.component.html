@@ -14,7 +14,7 @@
     </div>
     <div class="hero-image">
       <div class="placeholder-image">
-        💭
+        <i class="fas fa-comments fa-4x"></i>
       </div>
     </div>
   </section>
@@ -44,7 +44,9 @@
       <h2>Why Choose MindBridge?</h2>
       <div class="features-grid">
         <div *ngFor="let feature of features" class="feature-card">
-          <div class="feature-icon">{{ feature.icon }}</div>
+          <div class="feature-icon">
+            <i [class]="feature.icon"></i>  <!-- Fixed: Dynamic class binding -->
+          </div>
           <h3>{{ feature.title }}</h3>
           <p>{{ feature.description }}</p>
         </div>
@@ -70,21 +72,33 @@
       <h2>How It Works</h2>
       <div class="process-steps">
         <div class="step">
+          <div class="step-icon">
+            <i class="fas fa-user-plus fa-2x"></i>  <!-- Added icon -->
+          </div>
           <div class="step-number">1</div>
           <h3>Sign Up</h3>
           <p>Create your account as a client seeking guidance or an expert ready to share knowledge.</p>
         </div>
         <div class="step">
+          <div class="step-icon">
+            <i class="fas fa-handshake fa-2x"></i>  <!-- Added icon -->
+          </div>
           <div class="step-number">2</div>
           <h3>Connect</h3>
           <p>Browse profiles, read reviews, and find the perfect match for your needs.</p>
         </div>
         <div class="step">
+          <div class="step-icon">
+            <i class="fas fa-calendar-check fa-2x"></i>  <!-- Added icon -->
+          </div>
           <div class="step-number">3</div>
           <h3>Schedule</h3>
           <p>Book sessions at mutually convenient times through our easy scheduling system.</p>
         </div>
         <div class="step">
+          <div class="step-icon">
+            <i class="fas fa-chart-line fa-2x"></i>  <!-- Added icon -->
+          </div>
           <div class="step-number">4</div>
           <h3>Grow</h3>
           <p>Attend sessions, gain insights, and track your progress toward your goals.</p>
@@ -99,8 +113,12 @@
       <h2>Ready to Start Your Journey?</h2>
       <p>Join thousands of users who are already transforming their lives through expert guidance.</p>
       <div class="cta-buttons">
-        <a routerLink="/auth/register" class="btn btn-primary">Get Started</a>
-        <a routerLink="/auth/login" class="btn btn-outline">Sign In</a>
+        <a routerLink="/auth/register" class="btn btn-primary">
+          <i class="fas fa-rocket"></i> Get Started  <!-- Added icon -->
+        </a>
+        <a routerLink="/auth/login" class="btn btn-outline">
+          <i class="fas fa-sign-in-alt"></i> Sign In  <!-- Added icon -->
+        </a>
       </div>
     </div>
   </section>

@@ -230,3 +230,108 @@ body.high-contrast .skip-link {
   font-weight: bold;
   border: 2px solid #000000;
 }
+
+/* Icon styling */
+.icon {
+  margin-right: 8px;
+  color: #4f46e5; /* Your primary color */
+}
+
+.icon-sm {
+  font-size: 14px;
+}
+
+.icon-lg {
+  font-size: 24px;
+}
+
+.icon-success {
+  color: #10b981;
+}
+
+.icon-warning {
+  color: #f59e0b;
+}
+
+.icon-error {
+  color: #ef4444;
+}
+
+// Icon system
+.icon-system {
+  // Sizes
+  .icon-xs { font-size: 0.75rem; }
+  .icon-sm { font-size: 0.875rem; }
+  .icon-md { font-size: 1rem; }
+  .icon-lg { font-size: 1.25rem; }
+  .icon-xl { font-size: 1.5rem; }
+  .icon-2xl { font-size: 2rem; }
+
+  // Colors
+  .icon-primary { color: #4f46e5; }
+  .icon-secondary { color: #6b7280; }
+  .icon-success { color: #10b981; }
+  .icon-warning { color: #f59e0b; }
+  .icon-error { color: #ef4444; }
+  .icon-info { color: #3b82f6; }
+
+  // Spacing
+  .icon-spacing { margin-right: 0.5rem; }
+  .icon-spacing-lg { margin-right: 0.75rem; }
+  
+  // Animation
+  .icon-spin { animation: icon-spin 2s linear infinite; }
+  
+  @keyframes icon-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+}
+
+// Usage examples in your components:
+// <i class="fas fa-user icon-md icon-primary icon-spacing"></i>
+
+// Dashboard-specific icon styles
+.dashboard-icons {
+  // Metric cards
+  .metric-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    
+    &.primary { color: #4f46e5; }
+    &.success { color: #10b981; }
+    &.warning { color: #f59e0b; }
+    &.info { color: #3b82f6; }
+  }
+
+  // Status indicators
+  .status-icon {
+    font-size: 1.25rem;
+    margin-right: 0.5rem;
+    
+    &.confirmed { color: #10b981; }
+    &.pending { color: #f59e0b; }
+    &.cancelled { color: #ef4444; }
+    &.completed { color: #6b7280; }
+  }
+
+  // Action buttons
+  .action-icon {
+    font-size: 1rem;
+    margin-right: 0.5rem;
+    transition: transform 0.2s ease;
+    
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+
+  // Quick stats
+  .stat-icon {
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 1.5rem;
+    margin-right: 0.75rem;
+  }
+}

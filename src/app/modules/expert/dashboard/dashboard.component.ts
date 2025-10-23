@@ -22,28 +22,28 @@ import { RouterModule } from '@angular/router';
 
       <div class="stats-grid">
         <div class="stat-card">
-          <div class="stat-icon">📊</div>
+          <div class="stat-icon"><i class="fas fa-chart-bar"></i></div>
           <div class="stat-info">
             <h3>45</h3>
             <p>Total Sessions</p>
           </div>
         </div>
         <div class="stat-card">
-          <div class="stat-icon">⏳</div>
+          <div class="stat-icon"><i class="fas fa-hourglass-half"></i></div>
           <div class="stat-info">
             <h3>3</h3>
             <p>Pending</p>
           </div>
         </div>
         <div class="stat-card">
-          <div class="stat-icon">⭐</div>
+          <div class="stat-icon"><i class="fas fa-star"></i></div>
           <div class="stat-info">
             <h3>4.9/5</h3>
             <p>Client Rating</p>
           </div>
         </div>
         <div class="stat-card">
-          <div class="stat-icon">💰</div>
+          <div class="stat-icon"><i class="fas fa-dollar-sign"></i></div>
           <div class="stat-info">
             <h3>$2,340</h3>
             <p>Earnings</p>
@@ -74,13 +74,13 @@ import { RouterModule } from '@angular/router';
           <h2>Quick Actions</h2>
           <div class="quick-actions">
             <button routerLink="/expert/profile" class="action-card">
-              <div class="action-icon">⏰</div>
+              <div class="action-icon"><i class="fas fa-clock"></i></div>
               <h4>Set Availability</h4>
               <p>Manage your working hours</p>
             </button>
             
             <button class="action-card">
-              <div class="action-icon">💼</div>
+              <div class="action-icon"><i class="fas fa-user"></i></div>
               <h4>Update Profile</h4>
               <p>Edit your expertise</p>
             </button>

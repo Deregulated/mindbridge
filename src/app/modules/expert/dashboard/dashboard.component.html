@@ -39,7 +39,7 @@
       </div>
 
       <div *ngIf="!upcomingSessions?.length" class="empty-state">
-        <div class="empty-icon">📅</div>
+        <div class="empty-icon"><i class="fas fa-calendar"></i></div>
         <h3>No Sessions Today</h3>
         <p>You don't have any sessions scheduled for today.</p>
         <button routerLink="/expert/profile" class="btn btn-primary">
@@ -83,7 +83,7 @@
       </div>
 
       <div *ngIf="!recentSessions?.length" class="empty-state">
-        <div class="empty-icon">📝</div>
+        <div class="empty-icon"><i class="fas fa-edit"></i></div>
         <h3>No Recent Sessions</h3>
         <p>Your completed sessions will appear here.</p>
       </div>
@@ -102,7 +102,7 @@
               {{ session.scheduledDate | date: 'MMM d, y' }}
             </p>
             <div *ngIf="session.rating" class="session-rating">
-              <span class="rating-stars">⭐⭐⭐⭐⭐</span>
+              <span class="rating-stars"><i class="fas fa-star"></i></span>
               <span class="rating-value">{{ session.rating }}/5</span>
             </div>
             <p *ngIf="session.feedback" class="session-feedback">
@@ -150,25 +150,25 @@
       </div>
       <div class="quick-actions">
         <button routerLink="/expert/profile" class="action-card">
-          <div class="action-icon">⏰</div>
+          <div class="action-icon"><i class="fas fa-clock"></i></div>
           <h4>Set Availability</h4>
           <p>Manage your working hours and availability</p>
         </button>
 
         <button class="action-card">
-          <div class="action-icon">💼</div>
+          <div class="action-icon"><i class="fas fa-user"></i></div>
           <h4>Update Profile</h4>
           <p>Edit your expertise and qualifications</p>
         </button>
 
         <button class="action-card">
-          <div class="action-icon">📊</div>
+          <div class="action-icon"><i class="fas fa-chart-line"></i></div>
           <h4>View Analytics</h4>
           <p>See detailed performance metrics</p>
         </button>
 
         <button class="action-card">
-          <div class="action-icon">💰</div>
+          <div class="action-icon"><i class="fas fa-dollar-sign"></i></div>
           <h4>Earnings</h4>
           <p>Track your payments and revenue</p>
         </button>

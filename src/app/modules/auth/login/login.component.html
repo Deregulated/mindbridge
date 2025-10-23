@@ -14,10 +14,10 @@
       <p class="demo-label">Quick Demo Access:</p>
       <div class="demo-buttons-grid">
         <button (click)="demoLogin('client')" class="btn demo-btn client-demo" [disabled]="isLoading">
-          👤 Client Demo
+          <i class="fas fa-user"></i> Client Demo
         </button>
         <button (click)="demoLogin('expert')" class="btn demo-btn expert-demo" [disabled]="isLoading">
-          💼 Expert Demo
+          <i class="fas fa-laptop"></i>Expert Demo
         </button>
       </div>
     </div>
@@ -59,13 +59,14 @@
             [class.error]="formControls['password'].touched && formControls['password'].errors"
             placeholder="Enter your password"
             class="form-input password-input">
-          <button
-            type="button"
-            (click)="togglePasswordVisibility()"
-            class="password-toggle"
-            tabindex="-1">
-            {{ showPassword ? '🙈' : '👁️' }}
-          </button>
+        <button
+  type="button"
+  (click)="togglePasswordVisibility()"
+  class="password-toggle"
+  tabindex="-1">
+  <i [ngClass]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+</button>
+
         </div>
         <div *ngIf="formControls['password'].touched && formControls['password'].errors" class="error-message">
           {{ getPasswordError() }}

@@ -24,28 +24,28 @@ import { Session } from '../../../core/models/session.model';
 
       <div class="stats-grid">
         <div class="stat-card">
-          <div class="stat-icon">📊</div>
+          <div class="stat-icon"><i class="fas fa-chart-bar"></i></div>
           <div class="stat-info">
             <h3>12</h3>
             <p>Total Sessions</p>
           </div>
         </div>
         <div class="stat-card">
-          <div class="stat-icon">📅</div>
+          <div class="stat-icon"><i class="fas fa-calendar"></i></div>
           <div class="stat-info">
             <h3>3</h3>
             <p>Upcoming</p>
           </div>
         </div>
         <div class="stat-card">
-          <div class="stat-icon">✅</div>
+          <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
           <div class="stat-info">
             <h3>9</h3>
             <p>Completed</p>
           </div>
         </div>
         <div class="stat-card">
-          <div class="stat-icon">⭐</div>
+          <div class="stat-icon"><i class="fas fa-star"></i></div>
           <div class="stat-info">
             <h3>4.8/5</h3>
             <p>Expert Rating</p>
@@ -76,13 +76,13 @@ import { Session } from '../../../core/models/session.model';
           <h2>Quick Actions</h2>
           <div class="quick-actions">
             <button routerLink="/client/sessions" class="action-card">
-              <div class="action-icon">🔍</div>
+              <div class="action-icon"><i class="fas fa-search"></i></div>
               <h4>Find Experts</h4>
               <p>Browse and book sessions</p>
             </button>
             
             <button routerLink="/client/profile" class="action-card">
-              <div class="action-icon">👤</div>
+              <div class="action-icon"><i class="fas fa-user"></i></div>
               <h4>Update Profile</h4>
               <p>Manage your information</p>
             </button>
