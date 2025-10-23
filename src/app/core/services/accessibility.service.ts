@@ -1,5 +1,7 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+// src/app/core/services/accessibility.service.ts
+import { Injectable, Inject } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 export interface AccessibilitySettings {
   highContrast: boolean;
@@ -19,92 +21,103 @@ export class AccessibilityService {
     screenReader: false
   });
 
-  public settings$ = this.settings.asObservable();
+  settings$: Observable<AccessibilitySettings> = this.settings.asObservable();
 
-  constructor() {
-    // Load saved settings from localStorage
+  constructor(@Inject(DOCUMENT) private document: Document) {
     this.loadSettings();
+    this.detectSystemPreferences();
+  }
+
+  private loadSettings(): void {
+    const saved = localStorage.getItem('mindbridge-accessibility');
+    if (saved) {
+      try {
+        const settings = JSON.parse(saved);
+        this.settings.next(settings);
+        this.applySettings(settings);
+      } catch (e) {
+        console.warn('Failed to load accessibility settings');
+      }
+    }
+  }
+
+  private detectSystemPreferences(): void {
+    // Detect system preferences
+    const highContrast = window.matchMedia('(prefers-contrast: high)').matches;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const current = this.settings.value;
+    this.settings.next({
+      ...current,
+      highContrast: current.highContrast || highContrast,
+      reducedMotion: current.reducedMotion || reducedMotion
+    });
+
+    this.applySystemPreferences(highContrast, reducedMotion);
+  }
+
+  private applySystemPreferences(highContrast: boolean, reducedMotion: boolean): void {
+    if (highContrast) {
+      this.document.body.classList.add('system-high-contrast');
+    }
+    if (reducedMotion) {
+      this.document.body.classList.add('system-reduced-motion');
+    }
+  }
+
+  updateSettings(updates: Partial<AccessibilitySettings>): void {
+    const current = this.settings.value;
+    const newSettings = { ...current, ...updates };
+    
+    this.settings.next(newSettings);
+    this.applySettings(newSettings);
+    this.saveSettings(newSettings);
+  }
+
+  private applySettings(settings: AccessibilitySettings): void {
+    const body = this.document.body;
+
+    // High contrast
+    if (settings.highContrast) {
+      body.classList.add('high-contrast');
+    } else {
+      body.classList.remove('high-contrast');
+    }
+
+    // Large text
+    if (settings.largeText) {
+      body.classList.add('large-text');
+      this.document.documentElement.style.fontSize = '125%';
+    } else {
+      body.classList.remove('large-text');
+      this.document.documentElement.style.fontSize = '100%';
+    }
+
+    // Reduced motion
+    if (settings.reducedMotion) {
+      body.classList.add('reduced-motion');
+    } else {
+      body.classList.remove('reduced-motion');
+    }
+  }
+
+  private saveSettings(settings: AccessibilitySettings): void {
+    localStorage.setItem('mindbridge-accessibility', JSON.stringify(settings));
   }
 
   toggleHighContrast(): void {
     const current = this.settings.value;
-    const newSettings = { ...current, highContrast: !current.highContrast };
-    this.updateSettings(newSettings);
-    this.applyHighContrast(newSettings.highContrast);
+    this.updateSettings({ highContrast: !current.highContrast });
   }
 
   toggleLargeText(): void {
     const current = this.settings.value;
-    const newSettings = { ...current, largeText: !current.largeText };
-    this.updateSettings(newSettings);
-    this.applyLargeText(newSettings.largeText);
+    this.updateSettings({ largeText: !current.largeText });
   }
 
   toggleReducedMotion(): void {
     const current = this.settings.value;
-    const newSettings = { ...current, reducedMotion: !current.reducedMotion };
-    this.updateSettings(newSettings);
-    this.applyReducedMotion(newSettings.reducedMotion);
-  }
-
-  toggleScreenReader(): void {
-    const current = this.settings.value;
-    const newSettings = { ...current, screenReader: !current.screenReader };
-    this.updateSettings(newSettings);
-    this.applyScreenReader(newSettings.screenReader);
-  }
-
-  private updateSettings(settings: AccessibilitySettings): void {
-    this.settings.next(settings);
-    localStorage.setItem('accessibilitySettings', JSON.stringify(settings));
-  }
-
-  private loadSettings(): void {
-    const saved = localStorage.getItem('accessibilitySettings');
-    if (saved) {
-      const settings = JSON.parse(saved);
-      this.settings.next(settings);
-      
-      // Apply saved settings
-      this.applyHighContrast(settings.highContrast);
-      this.applyLargeText(settings.largeText);
-      this.applyReducedMotion(settings.reducedMotion);
-      this.applyScreenReader(settings.screenReader);
-    }
-  }
-
-  private applyHighContrast(enabled: boolean): void {
-    if (enabled) {
-      document.body.classList.add('high-contrast');
-    } else {
-      document.body.classList.remove('high-contrast');
-    }
-  }
-
-  private applyLargeText(enabled: boolean): void {
-    if (enabled) {
-      document.body.classList.add('large-text');
-    } else {
-      document.body.classList.remove('large-text');
-    }
-  }
-
-  private applyReducedMotion(enabled: boolean): void {
-    if (enabled) {
-      document.body.classList.add('reduced-motion');
-    } else {
-      document.body.classList.remove('reduced-motion');
-    }
-  }
-
-  private applyScreenReader(enabled: boolean): void {
-    // This would integrate with actual screen reader APIs
-    // For now, we'll just add a class for visual indication
-    if (enabled) {
-      document.body.classList.add('screen-reader-friendly');
-    } else {
-      document.body.classList.remove('screen-reader-friendly');
-    }
+    this.updateSettings({ reducedMotion: !current.reducedMotion });
   }
 
   getCurrentSettings(): AccessibilitySettings {

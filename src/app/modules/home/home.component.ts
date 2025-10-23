@@ -26,17 +26,17 @@ import { RouterModule } from '@angular/router';
         <h2>Why Choose MindBridge?</h2>
         <div class="features-grid">
           <div class="feature-card">
-            <div class="feature-icon">🤝</div>
+            <div class="feature-icon"><i class="fas fa-check-circle"></i></div>
             <h3>Connect with Experts</h3>
             <p>Book sessions with experienced professionals in various fields.</p>
           </div>
           <div class="feature-card">
-            <div class="feature-icon">📅</div>
+            <div class="feature-icon"><i class="fas fa-calendar"></i></div>
             <h3>Flexible Scheduling</h3>
             <p>Choose time slots that work best for your busy schedule.</p>
           </div>
           <div class="feature-card">
-            <div class="feature-icon">💬</div>
+            <div class="feature-icon"><i class="fas fa-comments"></i></div>
             <h3>Live Chat Support</h3>
             <p>Communicate with experts through our secure chat system.</p>
           </div>

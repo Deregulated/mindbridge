@@ -1,31 +1,126 @@
-.main-content {
-  min-height: calc(100vh - 120px); // Adjust based on header/footer height
-  padding-bottom: 2rem;
+/* ===== APP COMPONENT STYLES ===== */
+
+/* Reset and base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.accessibility-widget {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  z-index: 1000;
+html, body {
+  height: 100%;
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background-color: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+app-root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Skip Link */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #000;
+  color: white;
+  padding: 12px 16px;
+  text-decoration: none;
+  z-index: 10000;
+  border-radius: 0 0 4px 0;
+  font-weight: 600;
+  transition: top 0.2s ease;
   
-  // In high contrast mode, make it more visible
-  :host-context(.high-contrast) & {
-    border: 2px solid #000;
-    border-radius: 8px;
-    background: #fff;
+  &:focus {
+    top: 0;
+    outline: 3px solid #4f46e5;
+    outline-offset: 2px;
   }
 }
 
-// Responsive positioning
+/* Main Content */
+.main-content {
+  flex: 1;
+  padding: 2rem 0;
+  min-height: calc(100vh - 140px); /* Adjust based on header/footer height */
+  
+  &:focus {
+    outline: none;
+  }
+}
+
+/* Focus styles for keyboard navigation */
+.keyboard-nav *:focus {
+  outline: 3px solid #4f46e5 !important;
+  outline-offset: 2px !important;
+  border-radius: 2px !important;
+}
+
+/* Reduced Motion Support */
+.reduced-motion {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Dark Mode Support */
+.dark-mode {
+  background-color: #111827;
+  color: #f9fafb;
+
+  .main-content {
+    background-color: #111827;
+  }
+}
+
+/* High Contrast Mode */
+.high-contrast {
+  *:focus {
+    outline: 3px solid #0000ff !important;
+  }
+}
+
+/* Large Text Mode */
+.large-text {
+  font-size: 125%;
+  
+  .main-content {
+    font-size: inherit;
+  }
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
-  .accessibility-widget {
-    bottom: 10px;
-    right: 10px;
-    left: 10px;
-    
-    app-accessibility-toggle {
-      max-width: 100%;
-    }
+  .main-content {
+    padding: 1rem 0;
+    min-height: calc(100vh - 120px);
+  }
+}
+
+/* Print Styles */
+@media print {
+  .skip-link {
+    display: none;
+  }
+  
+  .main-content {
+    padding: 0;
   }
 }
