@@ -5,44 +5,35 @@ export interface User {
   firstName: string;
   lastName: string;
   avatar?: string;
+  phone?: string;
   isActive: boolean;
+  emailVerified?: boolean;
+  lastLogin?: Date;
   createdAt: Date;
+  updatedAt?: Date;
 }
-
 export interface Client extends User {
-  dateOfBirth?: Date;
-  emergencyContact?: string;
-  medicalHistory?: string;
+  company?: string;
+  industry?: string;
+  goals?: string[];
+  subscription?: Subscription;
 }
 
 export interface Expert extends User {
-  specialization: string;
-  licenseNumber: string;
+  specialization: string[];
   yearsOfExperience: number;
-  bio: string;
+  qualifications: string[];
   hourlyRate: number;
-  availability: AvailabilitySlot[];
+  rating: number;
+  totalSessions: number;
+  bio: string;
+  verified: boolean;
 }
 
-export interface AvailabilitySlot {
-  dayOfWeek: number;
-  startTime: string;
-  endTime: string;
+export interface Subscription {
+  type: 'basic' | 'premium' | 'enterprise';
+  startDate: Date;
+  endDate: Date;
+  active: boolean;
 }
 
-export interface AccessibilityPreferences {
-  highContrast: boolean;
-  fontSize: 'small' | 'medium' | 'large' | 'x-large';
-  reducedMotion: boolean;
-  screenReader: boolean;
-}
-
-export interface Session {
-  id: string;
-  clientId: string;
-  expertId: string;
-  scheduledTime: Date;
-  status: 'scheduled' | 'live' | 'completed' | 'cancelled';
-  recordingUrl?: string;
-  notes?: string;
-}

@@ -1,0 +1,144 @@
+<div class="expert-profile">
+  <!-- Profile Header -->
+  <div class="profile-header">
+    <div class="header-content">
+      <h1>Expert Profile</h1>
+      <p>Manage your professional information and availability</p>
+    </div>
+    <div class="header-actions">
+      <button type="button" class="btn btn-outline" (click)="onCancel()">Cancel</button>
+      <button type="submit" form="profileForm" class="btn btn-primary" [disabled]="!form.valid">
+        Save Changes
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-state">
+    <div class="loading-spinner"></div>
+    <p>Loading your profile...</p>
+  </div>
+
+  <!-- Profile Content -->
+  <div *ngIf="!isLoading" class="profile-content">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" id="profileForm" class="profile-form">
+      
+      <!-- Personal Information Section -->
+      <div class="form-section">
+        <h3>Personal Information</h3>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="firstName" class="form-label">First Name</label>
+            <input
+              id="firstName"
+              type="text"
+              formControlName="firstName"
+              placeholder="Enter your first name"
+              class="form-input">
+            <div *ngIf="form.get('firstName')?.invalid && form.get('firstName')?.touched" class="error-message">
+              First name is required
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="lastName" class="form-label">Last Name</label>
+            <input
+              id="lastName"
+              type="text"
+              formControlName="lastName"
+              placeholder="Enter your last name"
+              class="form-input">
+            <div *ngIf="form.get('lastName')?.invalid && form.get('lastName')?.touched" class="error-message">
+              Last name is required
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="email" class="form-label">Email Address</label>
+            <input
+              id="email"
+              type="email"
+              formControlName="email"
+              placeholder="Enter your email"
+              class="form-input">
+            <div *ngIf="form.get('email')?.invalid && form.get('email')?.touched" class="error-message">
+              Valid email is required
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="phone" class="form-label">Phone Number</label>
+            <input
+              id="phone"
+              type="tel"
+              formControlName="phone"
+              placeholder="Enter your phone number"
+              class="form-input">
+          </div>
+        </div>
+      </div>
+
+      <!-- Professional Information Section -->
+      <div class="form-section">
+        <h3>Professional Information</h3>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="yearsOfExperience" class="form-label">Years of Experience</label>
+            <input
+              id="yearsOfExperience"
+              type="number"
+              formControlName="yearsOfExperience"
+              placeholder="Enter years of experience"
+              class="form-input"
+              min="0">
+          </div>
+
+          <div class="form-group">
+            <label for="hourlyRate" class="form-label">Hourly Rate ($)</label>
+            <input
+              id="hourlyRate"
+              type="number"
+              formControlName="hourlyRate"
+              placeholder="Enter your hourly rate"
+              class="form-input"
+              min="0">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="bio" class="form-label">Professional Bio</label>
+          <textarea
+            id="bio"
+            formControlName="bio"
+            placeholder="Describe your expertise, background, and approach..."
+            class="form-textarea"
+            rows="4">
+          </textarea>
+        </div>
+      </div>
+
+      <!-- Stats Section -->
+      <div class="form-section">
+        <h3>Expert Stats</h3>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-value">{{ expert?.rating || '0' }}/5</div>
+            <div class="stat-label">Average Rating</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">{{ expert?.totalSessions || '0' }}</div>
+            <div class="stat-label">Total Sessions</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">{{ expert?.yearsOfExperience || '0' }} years</div>
+            <div class="stat-label">Experience</div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

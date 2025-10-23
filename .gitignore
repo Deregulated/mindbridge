@@ -1,42 +1,71 @@
-# See http://help.github.com/ignore-files/ for more about ignoring files.
+# ─────────────────────────────────────────
+# Angular / Node.js / Web App – MindBridge
+# ─────────────────────────────────────────
 
-# Compiled output
-/dist
-/tmp
-/out-tsc
-/bazel-out
+# Node modules  
+/node_modules/
 
-# Node
-/node_modules
-npm-debug.log
-yarn-error.log
+# Build output  
+/dist/
+/out-tsc/
+/tmp/
+/build/
+/coverage/
 
-# IDEs and editors
-.idea/
-.project
-.classpath
-.c9/
-*.launch
-.settings/
-*.sublime-workspace
+# Angular CLI cache & internal folder  
+/.angular/
+/.angular/
+/.angular/cache/
+/.angular/compiler/
 
-# Visual Studio Code
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-.history/*
+# WebRTC / logs / temp  
+libpeerconnection.log  
+webrtc.log  
+*.log 
+*.tmp
 
-# Miscellaneous
-/.angular/cache
-.sass-cache/
-/connect.lock
-/coverage
-/libpeerconnection.log
-testem.log
-/typings
+# Environment files (sensitive config, keys)  
+/src/environments/environment.ts  
+/src/environments/environment.prod.ts  
+.env  
+.env.*  
+!.env.example
 
-# System files
-.DS_Store
-Thumbs.db
+# Angular Material themes (if temporarily generated)  
+*.css.map  
+*.css.tmp  
+
+# Operating system files  
+.DS_Store  
+Thumbs.db  
+ehthumbs.db  
+Icon?  
+
+# IDEs / editors  
+/.idea/  
+*.sublime-workspace  
+*.sublime-project  
+.vscode/  
+*.code-workspace  
+
+# Miscellaneous  
+npm-debug.log*  
+yarn-error.log*  
+.ionic/  
+cordova/  
+www/  
+platforms/  
+
+# Assets and compiled static folders you do NOT want to commit  
+/assets/tmp/
+/assets/generated/
+/assets/build/
+
+# Lock and cache files  
+/package-lock.json  
+/yarn.lock  
+.pnp.js  
+.pnp.*  
+/.cache/
+
+# End of detailed section

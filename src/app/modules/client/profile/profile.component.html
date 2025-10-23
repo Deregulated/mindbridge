@@ -1,0 +1,145 @@
+<div class="client-profile">
+  <!-- Profile Header -->
+  <div class="profile-header">
+    <div class="header-content">
+      <h1>My Profile</h1>
+      <p>Manage your personal information and preferences</p>
+    </div>
+    <div class="header-actions">
+      <button type="button" class="btn btn-outline" (click)="onCancel()">Cancel</button>
+      <button type="submit" form="profileForm" class="btn btn-primary" [disabled]="!form.valid">
+        Save Changes
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-state">
+    <div class="loading-spinner"></div>
+    <p>Loading your profile...</p>
+  </div>
+
+  <!-- Profile Content -->
+  <div *ngIf="!isLoading" class="profile-content">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" id="profileForm" class="profile-form">
+      
+      <!-- Personal Information Section -->
+      <div class="form-section">
+        <h3>Personal Information</h3>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="firstName" class="form-label">First Name</label>
+            <input
+              id="firstName"
+              type="text"
+              formControlName="firstName"
+              placeholder="Enter your first name"
+              class="form-input">
+            <div *ngIf="form.get('firstName')?.invalid && form.get('firstName')?.touched" class="error-message">
+              First name is required
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="lastName" class="form-label">Last Name</label>
+            <input
+              id="lastName"
+              type="text"
+              formControlName="lastName"
+              placeholder="Enter your last name"
+              class="form-input">
+            <div *ngIf="form.get('lastName')?.invalid && form.get('lastName')?.touched" class="error-message">
+              Last name is required
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="email" class="form-label">Email Address</label>
+            <input
+              id="email"
+              type="email"
+              formControlName="email"
+              placeholder="Enter your email"
+              class="form-input">
+            <div *ngIf="form.get('email')?.invalid && form.get('email')?.touched" class="error-message">
+              Valid email is required
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="phone" class="form-label">Phone Number</label>
+            <input
+              id="phone"
+              type="tel"
+              formControlName="phone"
+              placeholder="Enter your phone number"
+              class="form-input">
+          </div>
+        </div>
+      </div>
+
+      <!-- Professional Information Section -->
+      <div class="form-section">
+        <h3>Professional Information</h3>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="company" class="form-label">Company</label>
+            <input
+              id="company"
+              type="text"
+              formControlName="company"
+              placeholder="Enter your company name"
+              class="form-input">
+          </div>
+
+          <div class="form-group">
+            <label for="industry" class="form-label">Industry</label>
+            <input
+              id="industry"
+              type="text"
+              formControlName="industry"
+              placeholder="Enter your industry"
+              class="form-input">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="bio" class="form-label">Bio</label>
+          <textarea
+            id="bio"
+            formControlName="bio"
+            placeholder="Tell us about yourself and your goals..."
+            class="form-textarea"
+            rows="4">
+          </textarea>
+        </div>
+      </div>
+
+      <!-- Subscription Section -->
+      <div class="form-section">
+        <h3>Subscription</h3>
+        <div class="subscription-info">
+          <div class="subscription-details">
+            <span class="subscription-badge" [class]="getSubscriptionBadgeClass(client?.subscription?.type)">
+              {{ client?.subscription?.type || 'No Subscription' }}
+            </span>
+            <p class="subscription-status">
+              Status: 
+              <span *ngIf="hasActiveSubscription()" class="status-active">
+                Active
+              </span>
+              <span *ngIf="!hasActiveSubscription()" class="status-inactive">
+                {{ client?.subscription ? 'Inactive' : 'No Subscription' }}
+              </span>
+            </p>
+          </div>
+          <button type="button" class="btn btn-outline">Manage Subscription</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,78 @@
+<div class="accessibility-widget">
+  <!-- Toggle Button -->
+  <button 
+    class="accessibility-toggle"
+    (click)="togglePanel()"
+    [attr.aria-expanded]="isPanelOpen"
+    aria-label="Accessibility settings">
+    ♿
+  </button>
+
+  <!-- Settings Panel -->
+  <div class="accessibility-panel" [class.open]="isPanelOpen">
+    <div class="panel-header">
+      <h3>Accessibility Settings</h3>
+      <button class="close-btn" (click)="togglePanel()" aria-label="Close accessibility settings">
+        ×
+      </button>
+    </div>
+
+    <div class="settings-list">
+      <div class="setting-item">
+        <label class="toggle-label">
+          <span class="toggle-text">High Contrast</span>
+          <div class="toggle-switch">
+            <input 
+              type="checkbox" 
+              [checked]="settings.highContrast"
+              (change)="toggleHighContrast()"
+              id="highContrast">
+            <span class="slider"></span>
+          </div>
+        </label>
+      </div>
+
+      <div class="setting-item">
+        <label class="toggle-label">
+          <span class="toggle-text">Large Text</span>
+          <div class="toggle-switch">
+            <input 
+              type="checkbox" 
+              [checked]="settings.largeText"
+              (change)="toggleLargeText()"
+              id="largeText">
+            <span class="slider"></span>
+          </div>
+        </label>
+      </div>
+
+      <div class="setting-item">
+        <label class="toggle-label">
+          <span class="toggle-text">Reduced Motion</span>
+          <div class="toggle-switch">
+            <input 
+              type="checkbox" 
+              [checked]="settings.reducedMotion"
+              (change)="toggleReducedMotion()"
+              id="reducedMotion">
+            <span class="slider"></span>
+          </div>
+        </label>
+      </div>
+
+      <div class="setting-item">
+        <label class="toggle-label">
+          <span class="toggle-text">Screen Reader Mode</span>
+          <div class="toggle-switch">
+            <input 
+              type="checkbox" 
+              [checked]="settings.screenReader"
+              (change)="toggleScreenReader()"
+              id="screenReader">
+            <span class="slider"></span>
+          </div>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>

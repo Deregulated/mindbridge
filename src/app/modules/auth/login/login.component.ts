@@ -1,211 +1,153 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
-
-// Material imports
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatTabsModule } from '@angular/material/tabs';
-import { MatIconModule } from '@angular/material/icon';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-
+import { Router, RouterModule, ActivatedRoute } from '@angular/router';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
+import { ValidationPatterns } from '../../../shared/utils/constants';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    RouterModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatTabsModule,
-    MatIconModule,
-    MatProgressSpinnerModule,
-    MatSnackBarModule,
-    MatCheckboxModule
-  ],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-  private fb = inject(FormBuilder);
-  private authService = inject(AuthService);
-  private router = inject(Router);
-  private snackBar = inject(MatSnackBar);
-
   loginForm: FormGroup;
-  selectedTab = 0;
   isLoading = false;
-  hidePassword = true;
-  isMobile = false;
+  errorMessage = '';
+  showPassword = false;
+  returnUrl = '/';
 
-  // Tab configuration
-  tabs = [
-    { label: 'Client Login', value: 'client', icon: 'person' },
-    { label: 'Expert Login', value: 'expert', icon: 'medical_services' }
-  ];
-
-  constructor() {
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {
     this.loginForm = this.createForm();
   }
 
   ngOnInit(): void {
-    this.checkMobileView();
-    window.addEventListener('resize', () => this.checkMobileView());
+    // Get return url from route parameters or default to home
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+    
+    // If user is already logged in, redirect to return url
+    if (this.authService.isAuthenticated()) {
+      this.redirectToDashboard();
+    }
   }
 
-  private createForm(): FormGroup {
+  createForm(): FormGroup {
     return this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required, Validators.pattern(ValidationPatterns.EMAIL)]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      rememberMe: [false],
-      role: ['client']
+      rememberMe: [false]
     });
-  }
-
-  private checkMobileView(): void {
-    this.isMobile = window.innerWidth < 768;
-  }
-
-  onTabChange(index: number): void {
-    this.selectedTab = index;
-    const role = this.tabs[index].value;
-    this.loginForm.patchValue({ role });
-  }
-
-  getTabIcon(index: number): string {
-    return this.tabs[index].icon;
-  }
-
-  togglePasswordVisibility(): void {
-    this.hidePassword = !this.hidePassword;
-  }
-
-  getEmailErrorMessage(): string {
-    const emailControl = this.loginForm.get('email');
-    if (emailControl?.hasError('required')) {
-      return 'Email is required';
-    }
-    return emailControl?.hasError('email') ? 'Please enter a valid email' : '';
-  }
-
-  getPasswordErrorMessage(): string {
-    const passwordControl = this.loginForm.get('password');
-    if (passwordControl?.hasError('required')) {
-      return 'Password is required';
-    }
-    return passwordControl?.hasError('minlength') ? 'Password must be at least 6 characters' : '';
   }
 
   onSubmit(): void {
     if (this.loginForm.valid) {
       this.isLoading = true;
-      const credentials = this.loginForm.value;
+      this.errorMessage = '';
 
-      // For demo purposes, use demo login
-      this.demoLogin(credentials.role as 'client' | 'expert');
+      const loginData = this.loginForm.value;
+
+      this.authService.login(loginData).subscribe({
+        next: (response) => {
+          this.isLoading = false;
+          if (response.success) {
+            this.redirectToDashboard();
+          }
+        },
+        error: (error) => {
+          this.isLoading = false;
+          this.errorMessage = error.error?.message || 'Login failed. Please check your credentials and try again.';
+          console.error('Login error:', error);
+        }
+      });
     } else {
       this.markFormGroupTouched();
     }
   }
 
+  private redirectToDashboard(): void {
+    const user = this.authService.getCurrentUser();
+    if (user) {
+      switch (user.role) {
+        case 'client':
+          this.router.navigate(['/client/dashboard']);
+          break;
+        case 'expert':
+          this.router.navigate(['/expert/dashboard']);
+          break;
+        default:
+          this.router.navigateByUrl(this.returnUrl);
+      }
+    } else {
+      this.router.navigateByUrl(this.returnUrl);
+    }
+  }
+
   private markFormGroupTouched(): void {
     Object.keys(this.loginForm.controls).forEach(key => {
-      this.loginForm.get(key)?.markAsTouched();
+      const control = this.loginForm.get(key);
+      control?.markAsTouched();
     });
   }
 
-  private showSuccessMessage(message: string): void {
-    this.snackBar.open(message, 'Close', {
-      duration: 3000,
-      panelClass: ['success-snackbar'],
-      horizontalPosition: 'center',
-      verticalPosition: 'top'
-    });
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
   }
 
-  private showErrorMessage(message: string): void {
-    this.snackBar.open(message, 'Close', {
-      duration: 5000,
-      panelClass: ['error-snackbar'],
-      horizontalPosition: 'center',
-      verticalPosition: 'top'
-    });
+  get formControls() {
+    return this.loginForm.controls;
   }
 
-  private redirectUser(role: string): void {
-    const route = role === 'client' ? '/client/dashboard' : '/expert/dashboard';
-    this.router.navigate([route]);
-  }
-
-  // Demo login for testing
-  quickLogin(role: 'client' | 'expert'): void {
-    this.isLoading = true;
-    
-    // Find tab index
-    const tabIndex = this.tabs.findIndex(tab => tab.value === role);
-    if (tabIndex !== -1) {
-      this.selectedTab = tabIndex;
-      this.loginForm.patchValue({ role });
+  getEmailError(): string {
+    const emailControl = this.formControls['email'];
+    if (emailControl.touched && emailControl.errors) {
+      if (emailControl.errors['required']) return 'Email is required';
+      if (emailControl.errors['pattern']) return 'Please enter a valid email address';
     }
-
-    this.demoLogin(role);
+    return '';
   }
 
-  private demoLogin(role: 'client' | 'expert'): void {
-    // Simulate API call with timeout
+  getPasswordError(): string {
+    const passwordControl = this.formControls['password'];
+    if (passwordControl.touched && passwordControl.errors) {
+      if (passwordControl.errors['required']) return 'Password is required';
+      if (passwordControl.errors['minlength']) return 'Password must be at least 6 characters';
+    }
+    return '';
+  }
+
+  // Demo login for testing - UPDATED to directly set user and redirect
+  demoLogin(role: 'client' | 'expert'): void {
+    this.isLoading = true;
+    this.errorMessage = '';
+
+    // Create mock user data based on role
+    const mockUser = {
+      id: role === 'client' ? '1' : '2',
+      email: role === 'client' ? 'client@demo.com' : 'expert@demo.com',
+      firstName: 'Demo',
+      lastName: role === 'client' ? 'Client' : 'Expert',
+      role: role,
+      isActive: true,
+      emailVerified: true,
+      lastLogin: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+
+    // Set the user directly in auth service (bypass API call)
+    this.authService.setCurrentUser(mockUser);
+    
+    // Simulate API delay
     setTimeout(() => {
       this.isLoading = false;
-      
-      const demoUser = role === 'client' 
-        ? {
-            id: '1',
-            email: 'client@mindbridge.com',
-            role: 'client',
-            firstName: 'John',
-            lastName: 'Client',
-            avatar: '👤',
-            isActive: true,
-            createdAt: new Date()
-          }
-        : {
-            id: '2', 
-            email: 'expert@mindbridge.com',
-            role: 'expert',
-            firstName: 'Dr. Sarah',
-            lastName: 'Expert',
-            avatar: '👨‍⚕️',
-            isActive: true,
-            createdAt: new Date(),
-            specialization: 'Clinical Psychology',
-            licenseNumber: 'PSY12345',
-            yearsOfExperience: 8,
-            bio: 'Specialized in cognitive behavioral therapy',
-            hourlyRate: 120,
-            availability: []
-          };
-
-      // Create mock auth response
-      const mockResponse = {
-        token: `demo_token_${role}`,
-        user: demoUser
-      };
-
-      // Store token and user
-      localStorage.setItem('token', mockResponse.token);
-      (this.authService as any).currentUserSubject.next(mockResponse.user);
-      
-      this.showSuccessMessage(`Welcome to MindBridge Demo, ${mockResponse.user.firstName}!`);
-      this.redirectUser(mockResponse.user.role);
+      this.redirectToDashboard();
     }, 1000);
   }
 }

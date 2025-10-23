@@ -2,66 +2,48 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
-// Material imports
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatIconModule } from '@angular/material/icon';
-
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [
-    CommonModule, 
-    RouterModule,
-    MatButtonModule,
-    MatCardModule,
-    MatIconModule
-  ],
-  templateUrl: './home.component.html',
+  imports: [CommonModule, RouterModule],
+  template: `
+    <section class="hero">
+      <div class="hero-content">
+        <h1>Connect with Experts, Anytime, Anywhere</h1>
+        <p class="hero-description">
+          MindBridge is your gateway to professional guidance and personal growth. 
+          Book sessions with verified experts in various fields and achieve your goals.
+        </p>
+        <div class="hero-actions">
+          <a routerLink="/auth/register" class="btn btn-primary">Get Started</a>
+          <a routerLink="/about" class="btn btn-secondary">Learn More</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="features-section">
+      <div class="container">
+        <h2>Why Choose MindBridge?</h2>
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">🤝</div>
+            <h3>Connect with Experts</h3>
+            <p>Book sessions with experienced professionals in various fields.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">📅</div>
+            <h3>Flexible Scheduling</h3>
+            <p>Choose time slots that work best for your busy schedule.</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">💬</div>
+            <h3>Live Chat Support</h3>
+            <p>Communicate with experts through our secure chat system.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  `,
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent {
-  features = [
-    {
-      icon: 'verified_user',
-      title: 'Secure & Confidential',
-      description: 'Your privacy is our priority. All sessions are encrypted and completely confidential.'
-    },
-    {
-      icon: 'schedule',
-      title: '24/7 Availability',
-      description: 'Access support whenever you need it. Our platform is available round the clock.'
-    },
-    {
-      icon: 'diversity',
-      title: 'Expert Professionals',
-      description: 'Connect with licensed mental health experts specialized in various therapeutic approaches.'
-    },
-    {
-      icon: 'devices',
-      title: 'Anywhere Access',
-      description: 'Use MindBridge on any device - desktop, tablet, or mobile for seamless support.'
-    }
-  ];
-
-  testimonials = [
-    {
-      name: 'Sarah M.',
-      role: 'Client',
-      content: 'MindBridge helped me find the perfect therapist. The sessions have been life-changing.',
-      avatar: '👩'
-    },
-    {
-      name: 'Dr. James R.',
-      role: 'Therapist',
-      content: 'A wonderful platform that makes mental health support accessible to everyone.',
-      avatar: '👨‍⚕️'
-    },
-    {
-      name: 'Alex T.',
-      role: 'Client',
-      content: 'The convenience of online sessions made it easy for me to prioritize my mental health.',
-      avatar: '🧑'
-    }
-  ];
-}
+export class HomeComponent {}

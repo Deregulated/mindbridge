@@ -1,22 +1,33 @@
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/home', pathMatch: 'full' },
-  { 
-    path: 'home', 
-    loadComponent: () => import('./modules/home/home.component').then(c => c.HomeComponent)
+  // Auth routes
+  {
+    path: 'auth',
+    loadChildren: () => import('./modules/auth/auth.routes').then(m => m.authRoutes)
   },
-  { 
-    path: 'about', 
-    loadComponent: () => import('./modules/about/about.component').then(c => c.AboutComponent)
+  
+  // Client routes
+  {
+    path: 'client',
+    loadChildren: () => import('./modules/client/client.routes').then(m => m.CLIENT_ROUTES)
   },
-  { 
-    path: 'client/dashboard', 
-    loadComponent: () => import('./modules/client/dashboard/dashboard.component').then(c => c.DashboardComponent)
+  
+  // Expert routes
+  {
+    path: 'expert',
+    loadChildren: () => import('./modules/expert/expert.routes').then(m => m.EXPERT_ROUTES)
   },
-  { 
-    path: 'expert/dashboard', 
-    loadComponent: () => import('./modules/expert/dashboard/dashboard.component').then(c => c.DashboardComponent)
+  
+  // Home route
+  {
+    path: '',
+    loadComponent: () => import('./modules/home/home.component').then(m => m.HomeComponent)
   },
-  { path: '**', redirectTo: '/home' }
+  
+  // 404 fallback - must be last
+  {
+    path: '**',
+    loadComponent: () => import('./modules/pages/not-found/not-found.component').then(m => m.NotFoundComponent)
+  }
 ];

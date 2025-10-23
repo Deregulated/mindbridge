@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-export interface AccessibilityPreferences {
+export interface AccessibilitySettings {
   highContrast: boolean;
-  fontSize: 'small' | 'medium' | 'large' | 'x-large';
+  largeText: boolean;
   reducedMotion: boolean;
   screenReader: boolean;
 }
@@ -12,72 +12,102 @@ export interface AccessibilityPreferences {
   providedIn: 'root'
 })
 export class AccessibilityService {
-  private readonly STORAGE_KEY = 'mindbridge_accessibility';
-  private preferencesSubject = new BehaviorSubject<AccessibilityPreferences>(this.getDefaultPreferences());
-  public preferences$ = this.preferencesSubject.asObservable();
+  private settings = new BehaviorSubject<AccessibilitySettings>({
+    highContrast: false,
+    largeText: false,
+    reducedMotion: false,
+    screenReader: false
+  });
+
+  public settings$ = this.settings.asObservable();
 
   constructor() {
-    this.loadPreferences();
+    // Load saved settings from localStorage
+    this.loadSettings();
   }
 
-  private getDefaultPreferences(): AccessibilityPreferences {
-    return {
-      highContrast: false,
-      fontSize: 'medium',
-      reducedMotion: false,
-      screenReader: false
-    };
+  toggleHighContrast(): void {
+    const current = this.settings.value;
+    const newSettings = { ...current, highContrast: !current.highContrast };
+    this.updateSettings(newSettings);
+    this.applyHighContrast(newSettings.highContrast);
   }
 
-  private loadPreferences(): void {
-    const saved = localStorage.getItem(this.STORAGE_KEY);
+  toggleLargeText(): void {
+    const current = this.settings.value;
+    const newSettings = { ...current, largeText: !current.largeText };
+    this.updateSettings(newSettings);
+    this.applyLargeText(newSettings.largeText);
+  }
+
+  toggleReducedMotion(): void {
+    const current = this.settings.value;
+    const newSettings = { ...current, reducedMotion: !current.reducedMotion };
+    this.updateSettings(newSettings);
+    this.applyReducedMotion(newSettings.reducedMotion);
+  }
+
+  toggleScreenReader(): void {
+    const current = this.settings.value;
+    const newSettings = { ...current, screenReader: !current.screenReader };
+    this.updateSettings(newSettings);
+    this.applyScreenReader(newSettings.screenReader);
+  }
+
+  private updateSettings(settings: AccessibilitySettings): void {
+    this.settings.next(settings);
+    localStorage.setItem('accessibilitySettings', JSON.stringify(settings));
+  }
+
+  private loadSettings(): void {
+    const saved = localStorage.getItem('accessibilitySettings');
     if (saved) {
-      try {
-        this.preferencesSubject.next(JSON.parse(saved));
-      } catch {
-        this.setPreferences(this.getDefaultPreferences());
-      }
+      const settings = JSON.parse(saved);
+      this.settings.next(settings);
+      
+      // Apply saved settings
+      this.applyHighContrast(settings.highContrast);
+      this.applyLargeText(settings.largeText);
+      this.applyReducedMotion(settings.reducedMotion);
+      this.applyScreenReader(settings.screenReader);
     }
   }
 
-  setPreferences(prefs: AccessibilityPreferences): void {
-    this.preferencesSubject.next(prefs);
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(prefs));
-    this.applyPreferences(prefs);
+  private applyHighContrast(enabled: boolean): void {
+    if (enabled) {
+      document.body.classList.add('high-contrast');
+    } else {
+      document.body.classList.remove('high-contrast');
+    }
   }
 
-  updatePreference<K extends keyof AccessibilityPreferences>(
-    key: K, 
-    value: AccessibilityPreferences[K]
-  ): void {
-    const current = this.preferencesSubject.value;
-    this.setPreferences({ ...current, [key]: value });
+  private applyLargeText(enabled: boolean): void {
+    if (enabled) {
+      document.body.classList.add('large-text');
+    } else {
+      document.body.classList.remove('large-text');
+    }
   }
 
-  private applyPreferences(prefs: AccessibilityPreferences): void {
-    const root = document.documentElement;
-    
-    // Apply high contrast
-    root.classList.toggle('high-contrast', prefs.highContrast);
-    
-    // Apply font size
-    root.style.setProperty('--font-size-modifier', this.getFontSizeValue(prefs.fontSize));
-    
-    // Apply reduced motion
-    root.classList.toggle('reduced-motion', prefs.reducedMotion);
+  private applyReducedMotion(enabled: boolean): void {
+    if (enabled) {
+      document.body.classList.add('reduced-motion');
+    } else {
+      document.body.classList.remove('reduced-motion');
+    }
   }
 
-  private getFontSizeValue(size: string): string {
-    const sizes = {
-      'small': '0.875rem',
-      'medium': '1rem',
-      'large': '1.125rem',
-      'x-large': '1.25rem'
-    };
-    return sizes[size as keyof typeof sizes] || '1rem';
+  private applyScreenReader(enabled: boolean): void {
+    // This would integrate with actual screen reader APIs
+    // For now, we'll just add a class for visual indication
+    if (enabled) {
+      document.body.classList.add('screen-reader-friendly');
+    } else {
+      document.body.classList.remove('screen-reader-friendly');
+    }
   }
 
-  getCurrentPreferences(): AccessibilityPreferences {
-    return this.preferencesSubject.value;
+  getCurrentSettings(): AccessibilitySettings {
+    return this.settings.value;
   }
 }

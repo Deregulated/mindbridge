@@ -2,138 +2,93 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
-// Material imports
-import { MatCardModule } from '@angular/material/card';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatBadgeModule } from '@angular/material/badge';
-import { MatToolbarModule } from '@angular/material/toolbar';
-
 @Component({
   selector: 'app-expert-dashboard',
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    // Material modules
-    MatCardModule,
-    MatButtonModule,
-    MatIconModule,
-    MatBadgeModule,
-    MatToolbarModule
-  ],
-  templateUrl: './dashboard.component.html',
+  imports: [CommonModule, RouterModule],
+  template: `
+    <div class="expert-dashboard">
+      <div class="dashboard-header">
+        <div class="header-content">
+          <h1>Expert Dashboard</h1>
+          <p>Welcome back! Manage your sessions and track your performance.</p>
+        </div>
+        <div class="header-actions">
+          <button routerLink="/expert/profile" class="btn btn-primary">
+            Update Availability
+          </button>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">📊</div>
+          <div class="stat-info">
+            <h3>45</h3>
+            <p>Total Sessions</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">⏳</div>
+          <div class="stat-info">
+            <h3>3</h3>
+            <p>Pending</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">⭐</div>
+          <div class="stat-info">
+            <h3>4.9/5</h3>
+            <p>Client Rating</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">💰</div>
+          <div class="stat-info">
+            <h3>$2,340</h3>
+            <p>Earnings</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="dashboard-content">
+        <div class="content-section">
+          <h2>Today's Sessions</h2>
+          <div class="sessions-list">
+            <div class="session-card">
+              <div class="session-info">
+                <h4>Career Guidance</h4>
+                <p>with Alice Johnson</p>
+                <p class="session-date">Jan 15, 2024 at 10:00 AM</p>
+                <p class="session-duration">60 minutes</p>
+              </div>
+              <div class="session-actions">
+                <button class="btn btn-primary">Start Session</button>
+                <button class="btn btn-outline">Reschedule</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="content-section">
+          <h2>Quick Actions</h2>
+          <div class="quick-actions">
+            <button routerLink="/expert/profile" class="action-card">
+              <div class="action-icon">⏰</div>
+              <h4>Set Availability</h4>
+              <p>Manage your working hours</p>
+            </button>
+            
+            <button class="action-card">
+              <div class="action-icon">💼</div>
+              <h4>Update Profile</h4>
+              <p>Edit your expertise</p>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `,
   styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent {
-  expertName = 'Michael Chen';
-  expertInitials = 'MC';
-  notificationCount = 5;
-
-  // Stats
-  stats = [
-    { value: 4, label: "Today's Sessions", icon: 'today' },
-    { value: 24, label: 'Active Clients', icon: 'people' },
-    { value: 4.9, label: 'Average Rating', icon: 'star' },
-    { value: 3240, label: 'Monthly Revenue', icon: 'attach_money' }
-  ];
-
-  // Today's sessions
-  todaysSessions = [
-    {
-      time: '9:00 AM',
-      client: 'Sarah Johnson',
-      type: 'Video Session',
-      status: 'completed'
-    },
-    {
-      time: '11:00 AM',
-      client: 'David Wilson',
-      type: 'Audio Session',
-      status: 'upcoming'
-    },
-    {
-      time: '2:00 PM',
-      client: 'Emily Davis',
-      type: 'Video Session',
-      status: 'upcoming'
-    },
-    {
-      time: '4:00 PM',
-      client: 'Robert Brown',
-      type: 'Video Session',
-      status: 'upcoming'
-    }
-  ];
-
-  // Recent clients
-  recentClients = [
-    {
-      name: 'Sarah Johnson',
-      lastSession: 'Jan 18',
-      avatar: 'SJ'
-    },
-    {
-      name: 'David Wilson',
-      lastSession: 'Jan 17',
-      avatar: 'DW'
-    },
-    {
-      name: 'Emily Davis',
-      lastSession: 'Jan 16',
-      avatar: 'ED'
-    }
-  ];
-
-  // Pending requests
-  pendingRequests = [
-    {
-      clientName: 'Jennifer Lopez',
-      requestedDate: 'Jan 19',
-      type: 'Initial Consultation'
-    },
-    {
-      clientName: 'Marcus Thompson',
-      requestedDate: 'Jan 18',
-      type: 'Therapy Session'
-    }
-  ];
-
-  // Session analytics data
-  sessionData = {
-    labels: ['Jan 1-7', 'Jan 8-14', 'Jan 15-21'],
-    data: [18, 22, 25]
-  };
-
-  sessionGrowth = 15;
-  retentionRate = 92;
-
-  // Action methods
-  manageAvailability(): void {
-    console.log('Manage availability clicked');
-  }
-
-  viewMessages(): void {
-    console.log('View messages clicked');
-  }
-
-  addNotes(): void {
-    console.log('Add notes clicked');
-  }
-
-  viewResources(): void {
-    console.log('View resources clicked');
-  }
-
-  acceptRequest(request: any): void {
-    console.log('Accept request:', request);
-    // Remove from pending requests
-    this.pendingRequests = this.pendingRequests.filter(r => r !== request);
-  }
-
-  declineRequest(request: any): void {
-    console.log('Decline request:', request);
-    // Remove from pending requests
-    this.pendingRequests = this.pendingRequests.filter(r => r !== request);
-  }
-}
+export class DashboardComponent {}

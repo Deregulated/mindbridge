@@ -1,111 +1,67 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ChatbotService } from '../../../core/services/chatbot.service';
-
-interface ChatMessage {
-  text: string;
-  sender: 'user' | 'bot';
-  timestamp: Date;
-  type: 'message' | 'suggestion';
-}
+import { FormsModule } from '@angular/forms';
+import { ChatbotService, ChatMessage } from '../../../core/services/chatbot.service';
 
 @Component({
   selector: 'app-chatbot',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './chatbot.component.html',
   styleUrls: ['./chatbot.component.scss']
 })
-export class ChatbotComponent implements OnInit {
+export class ChatbotComponent implements OnInit, AfterViewInit {
+  @ViewChild('messageContainer') private messageContainer!: ElementRef;
+  
   isOpen = false;
   messages: ChatMessage[] = [];
-  chatForm: FormGroup;
-  isLoading = false;
+  newMessage = '';
 
-  constructor(
-    private fb: FormBuilder,
-    private chatbotService: ChatbotService
-  ) {
-    this.chatForm = this.fb.group({
-      message: ['', Validators.required]
+  constructor(private chatbotService: ChatbotService) {}
+
+  ngOnInit(): void {
+    this.chatbotService.isOpen$.subscribe(open => {
+      this.isOpen = open;
+    });
+
+    this.chatbotService.messages$.subscribe(messages => {
+      this.messages = messages;
+      this.scrollToBottom();
     });
   }
 
-  ngOnInit(): void {
-    this.addWelcomeMessage();
+  ngAfterViewInit(): void {
+    this.scrollToBottom();
   }
 
   toggleChat(): void {
-    this.isOpen = !this.isOpen;
-    if (this.isOpen && this.messages.length === 1) {
-      this.addWelcomeMessage();
+    this.chatbotService.toggleChat();
+  }
+
+  sendMessage(): void {
+    if (this.newMessage.trim()) {
+      this.chatbotService.sendMessage(this.newMessage);
+      this.newMessage = '';
     }
   }
 
-  private addWelcomeMessage(): void {
-    this.messages.push({
-      text: 'Hello! I\'m your MindBridge assistant. How can I help you today?',
-      sender: 'bot',
-      timestamp: new Date(),
-      type: 'message'
-    });
+  onKeyPress(event: KeyboardEvent): void {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      this.sendMessage();
+    }
   }
 
-  async sendMessage(): Promise<void> {
-    if (this.chatForm.valid && !this.isLoading) {
-      const userMessage = this.chatForm.get('message')?.value;
-      
-      // Add user message
-      this.messages.push({
-        text: userMessage,
-        sender: 'user',
-        timestamp: new Date(),
-        type: 'message'
-      });
-
-      this.chatForm.reset();
-      this.isLoading = true;
-
-      try {
-        // Get bot response
-        const response = await this.chatbotService.getResponse(userMessage);
-        
-        // Add bot response
-        this.messages.push({
-          text: response.text,
-          sender: 'bot',
-          timestamp: new Date(),
-          type: response.type
-        });
-
-        // Add suggestions if any
-        if (response.suggestions) {
-          response.suggestions.forEach((suggestion: string) => {
-            this.messages.push({
-              text: suggestion,
-              sender: 'bot',
-              timestamp: new Date(),
-              type: 'suggestion'
-            });
-          });
-        }
-
-      } catch (error) {
-        this.messages.push({
-          text: 'I apologize, but I\'m having trouble responding right now. Please try again later or contact support.',
-          sender: 'bot',
-          timestamp: new Date(),
-          type: 'message'
-        });
-      } finally {
-        this.isLoading = false;
+  private scrollToBottom(): void {
+    setTimeout(() => {
+      if (this.messageContainer) {
+        this.messageContainer.nativeElement.scrollTop = 
+          this.messageContainer.nativeElement.scrollHeight;
       }
-    }
+    }, 100);
   }
 
-  onSuggestionClick(suggestion: string): void {
-    this.chatForm.patchValue({ message: suggestion });
-    this.sendMessage();
+  clearChat(): void {
+    this.chatbotService.clearMessages();
   }
 }

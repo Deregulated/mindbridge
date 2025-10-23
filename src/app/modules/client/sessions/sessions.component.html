@@ -1,0 +1,77 @@
+<div class="client-sessions">
+  <!-- Sessions Header -->
+  <div class="sessions-header">
+    <div class="header-content">
+      <h1>My Sessions</h1>
+      <p>Manage your scheduled sessions and view your session history</p>
+    </div>
+    <div class="header-actions">
+      <button routerLink="/client/dashboard" class="btn btn-primary">
+        Book New Session
+      </button>
+    </div>
+  </div>
+
+  <!-- Sessions Stats -->
+  <div class="sessions-stats">
+    <div class="stat-card">
+      <div class="stat-icon">📊</div>
+      <div class="stat-info">
+        <h3>{{ getTotalSessions() }}</h3>
+        <p>Total Sessions</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">📅</div>
+      <div class="stat-info">
+        <h3>{{ getUpcomingSessions() }}</h3>
+        <p>Upcoming</p>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">✅</div>
+      <div class="stat-info">
+        <h3>{{ getCompletedSessions() }}</h3>
+        <p>Completed</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filter Tabs -->
+  <div class="filter-tabs">
+    <button
+      *ngFor="let filter of filters"
+      (click)="applyFilter(filter.key)"
+      [class.active]="activeFilter === filter.key"
+      class="filter-tab">
+      {{ filter.label }}
+    </button>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-state">
+    <div class="loading-spinner"></div>
+    <p>Loading your sessions...</p>
+  </div>
+
+  <!-- Sessions List -->
+  <div *ngIf="!isLoading" class="sessions-list">
+    <!-- Empty State -->
+    <div *ngIf="!filteredSessions?.length" class="empty-state">
+      <div class="empty-icon">
+        <span *ngIf="activeFilter === 'upcoming'">📅</span>
+        <span *ngIf="activeFilter === 'completed'">✅</span>
+        <span *ngIf="activeFilter === 'cancelled'">❌</span>
+        <span *ngIf="activeFilter === 'all'">💬</span>
+      </div>
+      <h3>No Sessions Found</h3>
+      <p>
+        <span *ngIf="activeFilter === 'upcoming'">You don't have any upcoming sessions scheduled.</span>
+        <span *ngIf="activeFilter === 'completed'">You haven't completed any sessions yet.</span>
+        <span *ngIf="activeFilter === 'cancelled'">You don't have any cancelled sessions.</span>
+        <span *ngIf="activeFilter === 'all'">You haven't booked any sessions yet.</span>
+      </p>
+      <button routerLink="/client/dashboard" class="btn btn-primary">
+        Book Your First Session
+      </button>
+   

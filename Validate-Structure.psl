@@ -1,0 +1,250 @@
+# MindBridge Project Structure Validator and Cleaner
+# Run this script from your project root directory
+
+param(
+    [switch]$Clean = $false,
+    [switch]$Force = $false
+)
+
+Write-Host "=== MindBridge Project Structure Validator ===" -ForegroundColor Cyan
+Write-Host ""
+
+# Define the expected project structure
+$ExpectedStructure = @{
+    # Core directories
+    "src/app/core/guards" = @()
+    "src/app/core/interfaces" = @()
+    "src/app/core/models" = @()
+    "src/app/core/services" = @()
+    
+    # Auth module
+    "src/app/modules/auth/login" = @()
+    "src/app/modules/auth/register" = @()
+    
+    # Client module
+    "src/app/modules/client/dashboard" = @()
+    "src/app/modules/client/profile" = @()
+    "src/app/modules/client/sessions" = @()
+    
+    # Expert module
+    "src/app/modules/expert/dashboard" = @()
+    "src/app/modules/expert/profile" = @()
+    
+    # Other modules
+    "src/app/modules/home" = @()
+    "src/app/modules/about" = @()
+    "src/app/modules/pages/not-found" = @()
+    
+    # Shared components
+    "src/app/modules/shared/components/navbar" = @()
+    "src/app/modules/shared/components/footer" = @()
+    
+    # Environments
+    "src/environments" = @()
+}
+
+# Define essential files that should exist
+$EssentialFiles = @(
+    "src/app/core/models/user.model.ts",
+    "src/app/core/models/session.model.ts",
+    "src/app/core/interfaces/api-response.interface.ts",
+    "src/app/core/services/client.service.ts",
+    "src/app/core/services/expert.service.ts",
+    "src/app/core/services/auth.service.ts",
+    "src/app/modules/auth/login/login.component.ts",
+    "src/app/modules/auth/login/login.component.html",
+    "src/app/modules/auth/register/register.component.ts",
+    "src/app/modules/auth/register/register.component.html",
+    "src/app/modules/client/dashboard/dashboard.component.ts",
+    "src/app/modules/client/dashboard/dashboard.component.html",
+    "src/app/modules/client/profile/profile.component.ts",
+    "src/app/modules/client/profile/profile.component.html",
+    "src/app/modules/client/sessions/sessions.component.ts",
+    "src/app/modules/client/sessions/sessions.component.html",
+    "src/app/modules/expert/dashboard/dashboard.component.ts",
+    "src/app/modules/expert/dashboard/dashboard.component.html",
+    "src/app/modules/expert/profile/profile.component.ts",
+    "src/app/modules/expert/profile/profile.component.html",
+    "src/environments/environment.ts",
+    "src/environments/environment.prod.ts"
+)
+
+# Define files/folders that should NOT exist (common unnecessary files)
+$UnnecessaryItems = @(
+    "src/app/modules/auth/forgot-password", # If not implemented
+    "src/app/modules/client/old-sessions",  # Example of old/unused folders
+    "src/app/modules/expert/old-profile",   # Example of old/unused folders
+    "src/app/core/models/old-user.model.ts", # Old model files
+    "src/app/core/services/old-auth.service.ts" # Old service files
+)
+
+function Test-Structure {
+    Write-Host "Checking project structure..." -ForegroundColor Yellow
+    Write-Host ""
+    
+    $missingFolders = @()
+    $missingFiles = @()
+    $foundUnnecessary = @()
+    
+    # Check folders
+    foreach ($folder in $ExpectedStructure.Keys) {
+        if (-not (Test-Path $folder)) {
+            $missingFolders += $folder
+            Write-Host "❌ Missing folder: $folder" -ForegroundColor Red
+        } else {
+            Write-Host "✅ Folder exists: $folder" -ForegroundColor Green
+        }
+    }
+    
+    Write-Host ""
+    Write-Host "Checking essential files..." -ForegroundColor Yellow
+    Write-Host ""
+    
+    # Check files
+    foreach ($file in $EssentialFiles) {
+        if (-not (Test-Path $file)) {
+            $missingFiles += $file
+            Write-Host "❌ Missing file: $file" -ForegroundColor Red
+        } else {
+            Write-Host "✅ File exists: $file" -ForegroundColor Green
+        }
+    }
+    
+    Write-Host ""
+    Write-Host "Checking for unnecessary items..." -ForegroundColor Yellow
+    Write-Host ""
+    
+    # Check unnecessary items
+    foreach ($item in $UnnecessaryItems) {
+        if (Test-Path $item) {
+            $foundUnnecessary += $item
+            Write-Host "⚠️  Unnecessary item found: $item" -ForegroundColor Yellow
+        }
+    }
+    
+    return @{
+        MissingFolders = $missingFolders
+        MissingFiles = $missingFiles
+        UnnecessaryItems = $foundUnnecessary
+    }
+}
+
+function Create-MissingItems($missingFolders, $missingFiles) {
+    Write-Host ""
+    Write-Host "Creating missing items..." -ForegroundColor Cyan
+    
+    # Create missing folders
+    foreach ($folder in $missingFolders) {
+        try {
+            New-Item -ItemType Directory -Path $folder -Force | Out-Null
+            Write-Host "✅ Created folder: $folder" -ForegroundColor Green
+        }
+        catch {
+            Write-Host "❌ Failed to create folder: $folder" -ForegroundColor Red
+        }
+    }
+    
+    # Create placeholder files
+    foreach ($file in $missingFiles) {
+        try {
+            $directory = Split-Path $file -Parent
+            if (-not (Test-Path $directory)) {
+                New-Item -ItemType Directory -Path $directory -Force | Out-Null
+            }
+            
+            $filename = Split-Path $file -Leaf
+            $content = "// Placeholder file for $filename`n// Created by structure validator on $(Get-Date)"
+            
+            if ($file.EndsWith('.html')) {
+                $content = "<!-- Placeholder file for $filename -->`n<!-- Created by structure validator on $(Get-Date) -->"
+            }
+            
+            Set-Content -Path $file -Value $content
+            Write-Host "✅ Created placeholder: $file" -ForegroundColor Green
+        }
+        catch {
+            Write-Host "❌ Failed to create file: $file" -ForegroundColor Red
+        }
+    }
+}
+
+function Remove-UnnecessaryItems($unnecessaryItems, $force) {
+    Write-Host ""
+    Write-Host "Cleaning unnecessary items..." -ForegroundColor Cyan
+    
+    foreach ($item in $unnecessaryItems) {
+        if ($force) {
+            try {
+                if (Test-Path $item -PathType Container) {
+                    Remove-Item $item -Recurse -Force
+                    Write-Host "✅ Removed folder: $item" -ForegroundColor Green
+                } else {
+                    Remove-Item $item -Force
+                    Write-Host "✅ Removed file: $item" -ForegroundColor Green
+                }
+            }
+            catch {
+                Write-Host "❌ Failed to remove: $item" -ForegroundColor Red
+            }
+        } else {
+            Write-Host "💡 Would remove: $item (use -Force to actually remove)" -ForegroundColor Yellow
+        }
+    }
+}
+
+function Show-Summary($results) {
+    Write-Host ""
+    Write-Host "=== VALIDATION SUMMARY ===" -ForegroundColor Cyan
+    Write-Host "Missing folders: $($results.MissingFolders.Count)" -ForegroundColor $(if ($results.MissingFolders.Count -eq 0) { "Green" } else { "Red" })
+    Write-Host "Missing files: $($results.MissingFiles.Count)" -ForegroundColor $(if ($results.MissingFiles.Count -eq 0) { "Green" } else { "Red" })
+    Write-Host "Unnecessary items: $($results.UnnecessaryItems.Count)" -ForegroundColor $(if ($results.UnnecessaryItems.Count -eq 0) { "Green" } else { "Yellow" })
+    
+    if ($results.MissingFolders.Count -eq 0 -and $results.MissingFiles.Count -eq 0 -and $results.UnnecessaryItems.Count -eq 0) {
+        Write-Host ""
+        Write-Host "🎉 Project structure is perfect!" -ForegroundColor Green
+    }
+}
+
+# Main execution
+try {
+    # Check if we're in the right directory (look for angular.json or package.json)
+    if (-not (Test-Path "angular.json") -and -not (Test-Path "package.json")) {
+        Write-Host "❌ Error: This doesn't appear to be an Angular project root directory." -ForegroundColor Red
+        Write-Host "   Please run this script from your project root (where angular.json is located)" -ForegroundColor Yellow
+        exit 1
+    }
+    
+    # Run structure check
+    $results = Test-Structure
+    
+    # Show summary
+    Show-Summary $results
+    
+    # Auto-fix if requested
+    if ($results.MissingFolders.Count -gt 0 -or $results.MissingFiles.Count -gt 0) {
+        if ($Clean -or $Force) {
+            Create-MissingItems $results.MissingFolders $results.MissingFiles
+        } else {
+            Write-Host ""
+            Write-Host "💡 Run with -Clean to create missing folders and placeholder files" -ForegroundColor Yellow
+        }
+    }
+    
+    # Clean unnecessary items if requested
+    if ($results.UnnecessaryItems.Count -gt 0) {
+        if ($Force) {
+            Remove-UnnecessaryItems $results.UnnecessaryItems $true
+        } elseif ($Clean) {
+            Remove-UnnecessaryItems $results.UnnecessaryItems $false
+        } else {
+            Write-Host ""
+            Write-Host "💡 Run with -Force to remove unnecessary items" -ForegroundColor Yellow
+        }
+    }
+    
+    Write-Host ""
+    Write-Host "=== Script completed ===" -ForegroundColor Cyan
+    
+} catch {
+    Write-Host "❌ Script error: $($_.Exception.Message)" -ForegroundColor Red
+}

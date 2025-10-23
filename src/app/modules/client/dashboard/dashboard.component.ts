@@ -1,43 +1,114 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-
-// Material imports
-import { MatCardModule } from '@angular/material/card';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatBadgeModule } from '@angular/material/badge';
-import { MatToolbarModule } from '@angular/material/toolbar';
+import { SessionService } from '../../../core/services/session.service';
+import { Session } from '../../../core/models/session.model';
 
 @Component({
   selector: 'app-client-dashboard',
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    // Material modules
-    MatCardModule,
-    MatButtonModule,
-    MatIconModule,
-    MatBadgeModule,
-    MatToolbarModule
-  ],
-  templateUrl: './dashboard.component.html',
+  imports: [CommonModule, RouterModule],
+  template: `
+    <div class="client-dashboard">
+      <div class="dashboard-header">
+        <div class="header-content">
+          <h1>Client Dashboard</h1>
+          <p>Welcome back! Here's your overview.</p>
+        </div>
+        <div class="header-actions">
+          <button routerLink="/client/sessions" class="btn btn-primary">
+            Book New Session
+          </button>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">📊</div>
+          <div class="stat-info">
+            <h3>12</h3>
+            <p>Total Sessions</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">📅</div>
+          <div class="stat-info">
+            <h3>3</h3>
+            <p>Upcoming</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">✅</div>
+          <div class="stat-info">
+            <h3>9</h3>
+            <p>Completed</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">⭐</div>
+          <div class="stat-info">
+            <h3>4.8/5</h3>
+            <p>Expert Rating</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="dashboard-content">
+        <div class="content-section">
+          <h2>Upcoming Sessions</h2>
+          <div class="sessions-list">
+            <div class="session-card">
+              <div class="session-info">
+                <h4>Career Guidance</h4>
+                <p>with Dr. Sarah Smith</p>
+                <p class="session-date">Jan 15, 2024 at 10:00 AM</p>
+                <p class="session-duration">60 minutes</p>
+              </div>
+              <div class="session-actions">
+                <button class="btn btn-primary">Join Session</button>
+                <button class="btn btn-outline">Reschedule</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="content-section">
+          <h2>Quick Actions</h2>
+          <div class="quick-actions">
+            <button routerLink="/client/sessions" class="action-card">
+              <div class="action-icon">🔍</div>
+              <h4>Find Experts</h4>
+              <p>Browse and book sessions</p>
+            </button>
+            
+            <button routerLink="/client/profile" class="action-card">
+              <div class="action-icon">👤</div>
+              <h4>Update Profile</h4>
+              <p>Manage your information</p>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `,
   styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent {
-  userName = 'Sarah Johnson';
-  notificationCount = 3;
+export class DashboardComponent implements OnInit {
+  upcomingSessions: Session[] = [];
 
-  stats = [
-    { value: 2, label: 'Upcoming Sessions', icon: 'event_available' },
-    { value: 12, label: 'Completed Sessions', icon: 'check_circle' },
-    { value: 75, label: 'Wellness Progress', icon: 'trending_up' },
-    { value: 8, label: 'Resources', icon: 'menu_book' }
-  ];
+  constructor(private sessionService: SessionService) {}
 
-  upcomingSessions = [
-    { time: '2:00 PM', expert: 'Dr. Michael Chen', type: 'Video Session' },
-    { time: '10:00 AM', expert: 'Dr. Emily Rodriguez', type: 'Audio Session' }
-  ];
+  ngOnInit(): void {
+    this.loadSessions();
+  }
+
+  loadSessions(): void {
+    this.sessionService.getSessions().subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.upcomingSessions = response.data ?? [];
+        }
+      }
+    });
+  }
 }

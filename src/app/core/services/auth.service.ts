@@ -1,150 +1,85 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
-
-export interface AuthResponse {
-  token: string;
-  user: any;
-}
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { ApiResponse } from '../interfaces/api-response.interface';
+import { User } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly API_URL = 'http://localhost:3000/api/auth';
-  private currentUserSubject = new BehaviorSubject<any>(null);
+  private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
-  private http = inject(HttpClient);
 
-  constructor() {
-    this.loadUserFromStorage();
-  }
+  constructor(private http: HttpClient) {}
 
-  private decodeToken(token: string): any {
-    try {
-      const base64Url = token.split('.')[1];
-      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-      }).join(''));
-      return JSON.parse(jsonPayload);
-    } catch (error) {
-      return null;
-    }
-  }
+  login(loginData: any): Observable<ApiResponse<any>> {
+    // Determine role based on email for demo purposes
+    const isClient = loginData.email.includes('client');
+    const isExpert = loginData.email.includes('expert');
+    
+    const role = isClient ? 'client' : isExpert ? 'expert' : 'client';
+    
+    const userData = {
+      id: '1',
+      email: loginData.email,
+      firstName: 'John',
+      lastName: 'Doe',
+      role: role,
+      isActive: true,
+      emailVerified: true,
+      lastLogin: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
 
-  private loadUserFromStorage(): void {
-    const token = localStorage.getItem('token');
-    if (token) {
-      try {
-        const decoded = this.decodeToken(token);
-        this.currentUserSubject.next(decoded.user);
-      } catch (error) {
-        this.logout();
+    return of({
+      success: true,
+      data: {
+        user: userData,
+        token: 'mock-jwt-token',
+        refreshToken: 'mock-refresh-token',
+        expiresIn: 3600
       }
-    }
-  }
-
-  clientLogin(credentials: { email: string; password: string }): Observable<AuthResponse> {
-    // For demo purposes - replace with actual API call
-    return new Observable(observer => {
-      setTimeout(() => {
-        const mockResponse: AuthResponse = {
-          token: 'demo_token',
-          user: {
-            id: '1',
-            email: credentials.email,
-            role: 'client',
-            firstName: 'Demo',
-            lastName: 'User'
-          }
-        };
-        this.setSession(mockResponse);
-        observer.next(mockResponse);
-        observer.complete();
-      }, 1000);
     });
   }
 
-  expertLogin(credentials: { email: string; password: string }): Observable<AuthResponse> {
-    // For demo purposes - replace with actual API call
-    return new Observable(observer => {
-      setTimeout(() => {
-        const mockResponse: AuthResponse = {
-          token: 'demo_token',
-          user: {
-            id: '2',
-            email: credentials.email,
-            role: 'expert',
-            firstName: 'Dr. Demo',
-            lastName: 'Expert'
-          }
-        };
-        this.setSession(mockResponse);
-        observer.next(mockResponse);
-        observer.complete();
-      }, 1000);
+  register(registerData: any): Observable<ApiResponse<any>> {
+    return of({
+      success: true,
+      data: {
+        user: {
+          id: '2',
+          email: registerData.email,
+          firstName: registerData.firstName,
+          lastName: registerData.lastName,
+          role: registerData.role,
+          isActive: true,
+          emailVerified: false,
+          lastLogin: new Date(),
+          createdAt: new Date(),
+          updatedAt: new Date()
+        },
+        token: 'mock-jwt-token',
+        refreshToken: 'mock-refresh-token',
+        expiresIn: 3600
+      }
     });
-  }
-
-  clientRegister(userData: any): Observable<AuthResponse> {
-    // For demo purposes - replace with actual API call
-    return new Observable(observer => {
-      setTimeout(() => {
-        const mockResponse: AuthResponse = {
-          token: 'demo_token',
-          user: {
-            ...userData,
-            id: '1',
-            role: 'client'
-          }
-        };
-        this.setSession(mockResponse);
-        observer.next(mockResponse);
-        observer.complete();
-      }, 1000);
-    });
-  }
-
-  expertRegister(userData: any): Observable<AuthResponse> {
-    // For demo purposes - replace with actual API call
-    return new Observable(observer => {
-      setTimeout(() => {
-        const mockResponse: AuthResponse = {
-          token: 'demo_token',
-          user: {
-            ...userData,
-            id: '2',
-            role: 'expert'
-          }
-        };
-        this.setSession(mockResponse);
-        observer.next(mockResponse);
-        observer.complete();
-      }, 1000);
-    });
-  }
-
-  private setSession(authResult: AuthResponse): void {
-    localStorage.setItem('token', authResult.token);
-    this.currentUserSubject.next(authResult.user);
   }
 
   logout(): void {
-    localStorage.removeItem('token');
     this.currentUserSubject.next(null);
   }
 
-  getToken(): string | null {
-    return localStorage.getItem('token');
+  getCurrentUser(): User | null {
+    return this.currentUserSubject.value;
   }
 
-  isLoggedIn(): boolean {
-    return !!this.getToken();
+  isAuthenticated(): boolean {
+    return !!this.currentUserSubject.value;
   }
 
-  getUserRole(): string | null {
-    const user = this.currentUserSubject.value;
-    return user ? user.role : null;
+  setCurrentUser(user: User): void {
+    this.currentUserSubject.next(user);
   }
 }

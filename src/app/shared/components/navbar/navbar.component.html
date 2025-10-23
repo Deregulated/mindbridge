@@ -1,38 +1,126 @@
 <nav class="navbar">
-  <div class="navbar-container">
+  <div class="nav-container">
     <!-- Logo -->
-    <div class="logo" routerLink="/">
-      <span class="logo-text">MindBridge</span>
+    <div class="nav-brand">
+      <a routerLink="/" class="logo-link" (click)="closeMenu()">
+        <span class="logo-icon">💬</span>
+        <span class="logo-text">MindBridge</span>
+      </a>
     </div>
 
-    <!-- Navigation Links -->
-    <div class="nav-links" [class.mobile-open]="isMenuOpen">
-      <a *ngIf="!currentUser" routerLink="/" class="nav-link">Home</a>
-      <a *ngIf="!currentUser" routerLink="/about" class="nav-link">About</a>
-      <a *ngIf="!currentUser" routerLink="/auth/login" class="nav-link">Login</a>
-      
-      <!-- Client Navigation -->
-      <ng-container *ngIf="currentUser?.role === 'client'">
-        <a routerLink="/client/dashboard" class="nav-link">Dashboard</a>
-        <a routerLink="/client/sessions" class="nav-link">My Sessions</a>
-        <a routerLink="/client/profile" class="nav-link">Profile</a>
-      </ng-container>
+    <!-- Desktop Navigation -->
+    <div class="nav-menu" [class.active]="isMenuOpen">
+      <!-- Public Links -->
+      <div class="nav-links" *ngIf="!currentUser">
+        <a 
+          routerLink="/" 
+          class="nav-link" 
+          [class.active]="isActiveRoute('/')"
+          (click)="closeMenu()">
+          Home
+        </a>
+        <a 
+          routerLink="/about" 
+          class="nav-link"
+          [class.active]="isActiveRoute('/about')"
+          (click)="closeMenu()">
+          About
+        </a>
+        <a 
+          routerLink="/auth/login" 
+          class="nav-link"
+          [class.active]="isActiveRoute('/auth/login')"
+          (click)="closeMenu()">
+          Login
+        </a>
+        <a 
+          routerLink="/auth/register" 
+          class="nav-link nav-link-primary"
+          [class.active]="isActiveRoute('/auth/register')"
+          (click)="closeMenu()">
+          Get Started
+        </a>
+      </div>
 
-      <!-- Expert Navigation -->
-      <ng-container *ngIf="currentUser?.role === 'expert'">
-        <a routerLink="/expert/dashboard" class="nav-link">Dashboard</a>
-        <a routerLink="/expert/sessions" class="nav-link">Sessions</a>
-        <a routerLink="/expert/profile" class="nav-link">Profile</a>
-      </ng-container>
+      <!-- Authenticated User Links -->
+      <div class="nav-links" *ngIf="currentUser">
+        <!-- Client Links -->
+        <ng-container *ngIf="currentUser.role === 'client'">
+          <a 
+            routerLink="/client/dashboard" 
+            class="nav-link"
+            [class.active]="isActiveRoute('/client/dashboard')"
+            (click)="closeMenu()">
+            Dashboard
+          </a>
+          <a 
+            routerLink="/client/sessions" 
+            class="nav-link"
+            [class.active]="isActiveRoute('/client/sessions')"
+            (click)="closeMenu()">
+            My Sessions
+          </a>
+          <a 
+            routerLink="/client/profile" 
+            class="nav-link"
+            [class.active]="isActiveRoute('/client/profile')"
+            (click)="closeMenu()">
+            Profile
+          </a>
+        </ng-container>
 
-      <!-- <app-accessibility-toggle></app-accessibility-toggle> -->
+        <!-- Expert Links -->
+        <ng-container *ngIf="currentUser.role === 'expert'">
+          <a 
+            routerLink="/expert/dashboard" 
+            class="nav-link"
+            [class.active]="isActiveRoute('/expert/dashboard')"
+            (click)="closeMenu()">
+            Dashboard
+          </a>
+          <a 
+            routerLink="/expert/sessions" 
+            class="nav-link"
+            [class.active]="isActiveRoute('/expert/sessions')"
+            (click)="closeMenu()">
+            Sessions
+          </a>
+          <a 
+            routerLink="/expert/profile" 
+            class="nav-link"
+            [class.active]="isActiveRoute('/expert/profile')"
+            (click)="closeMenu()">
+            Profile
+          </a>
+        </ng-container>
+      </div>
 
-      <button *ngIf="currentUser" (click)="logout()" class="nav-link logout-btn">Logout</button>
+      <!-- User Menu for Authenticated Users -->
+      <div class="user-menu" *ngIf="currentUser">
+        <div class="user-info">
+          <div class="user-avatar">
+            {{ getUserInitials() }}
+          </div>
+          <div class="user-details">
+            <span class="user-name">{{ currentUser.firstName }} {{ currentUser.lastName }}</span>
+            <span class="user-role">{{ currentUser.role }}</span>
+          </div>
+        </div>
+        <button class="logout-btn" (click)="logout()">
+          Logout
+        </button>
+      </div>
     </div>
 
     <!-- Mobile Menu Toggle -->
-    <button class="mobile-toggle" (click)="toggleMenu()" aria-label="Toggle menu">
-      <span class="icon">{{ isMenuOpen ? '✕' : '☰' }}</span>
+    <button 
+      class="menu-toggle"
+      (click)="toggleMenu()"
+      [attr.aria-expanded]="isMenuOpen"
+      aria-label="Toggle navigation menu">
+      <span></span>
+      <span></span>
+      <span></span>
     </button>
   </div>
 </nav>

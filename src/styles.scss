@@ -1,210 +1,232 @@
-/* Use one of the available Angular Material themes */
+/* You can add global styles to this file, and also import other style files */
 @import '@angular/material/prebuilt-themes/indigo-pink.css';
-/* Available themes:
-   - indigo-pink.css (default)
-   - deeppurple-amber.css
-   - pink-bluegrey.css  
-   - purple-green.css
-*/
 
-/* Global Variables */
-:root {
-  --primary-color: #4a90e2;
-  --secondary-color: #50e3c2;
-  --accent-color: #9013fe;
-  --warning-color: #f5a623;
-  --error-color: #d0021b;
-  --success-color: #7ed321;
-  
-  --text-primary: #333333;
-  --text-secondary: #666666;
-  --text-light: #999999;
-  
-  --background-primary: #ffffff;
-  --background-secondary: #f8f9fa;
-  --background-accent: #e3f2fd;
-  
-  --border-color: #e0e0e0;
-  --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  
-  --font-family: 'Inter', 'Roboto', 'Helvetica', 'Arial', sans-serif;
-  --font-size-base: 1rem;
-  --line-height: 1.6;
-  
-  --spacing-xs: 0.25rem;
-  --spacing-sm: 0.5rem;
-  --spacing-md: 1rem;
-  --spacing-lg: 1.5rem;
-  --spacing-xl: 2rem;
-  
-  --border-radius: 8px;
-  --border-radius-lg: 12px;
+html, body { 
+  height: 100%; 
+  margin: 0; 
+  font-family: Roboto, "Helvetica Neue", sans-serif; 
 }
 
-/* High Contrast Theme */
-.high-contrast {
-  --primary-color: #000000;
-  --secondary-color: #ffffff;
-  --text-primary: #000000;
-  --text-secondary: #333333;
-  --background-primary: #ffffff;
-  --background-secondary: #f0f0f0;
-  --border-color: #000000;
-}
-
-/* Reduced Motion */
-.reduced-motion * {
-  animation-duration: 0.01ms !important;
-  animation-iteration-count: 1 !important;
-  transition-duration: 0.01ms !important;
-}
-
-/* Global Styles */
 * {
   box-sizing: border-box;
 }
 
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  font-family: var(--font-family);
-  font-size: var(--font-size-base);
-  line-height: var(--line-height);
-  color: var(--text-primary);
-  background-color: var(--background-primary);
+a {
+  text-decoration: none;
 }
 
-/* Accessibility Focus Styles */
-button:focus-visible,
-a:focus-visible,
-input:focus-visible,
-select:focus-visible,
-textarea:focus-visible {
-  outline: 3px solid var(--primary-color);
-  outline-offset: 2px;
-}
-
-/* Utility Classes */
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 var(--spacing-md);
+  padding: 0 2rem;
 }
 
-.text-center { text-align: center; }
-.text-left { text-align: left; }
-.text-right { text-align: right; }
-
-.mt-0 { margin-top: 0; }
-.mt-1 { margin-top: var(--spacing-xs); }
-.mt-2 { margin-top: var(--spacing-sm); }
-.mt-3 { margin-top: var(--spacing-md); }
-.mt-4 { margin-top: var(--spacing-lg); }
-.mt-5 { margin-top: var(--spacing-xl); }
-
-/* Material Overrides */
+// Material overrides
 .mat-toolbar {
-  background: var(--background-primary) !important;
-  color: var(--text-primary) !important;
-  box-shadow: var(--shadow) !important;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
-.mat-card {
-  border-radius: var(--border-radius-lg) !important;
-  box-shadow: var(--shadow) !important;
+// Utility classes
+.text-center {
+  text-align: center;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  :root {
-    --font-size-base: 0.9rem;
-  }
+.mt-2 { margin-top: 2rem; }
+.mb-2 { margin-bottom: 2rem; }
+.p-2 { padding: 2rem; }
+
+/* Base font sizes for accessibility */
+:root {
+  --font-size-small: 14px;
+  --font-size-medium: 16px;
+  --font-size-large: 18px;
+  --font-size-xlarge: 20px;
   
-  .container {
-    padding: 0 var(--spacing-sm);
-  }
+  --color-primary: #3f51b5;
+  --color-primary-dark: #303f9f;
+  --color-text: #333333;
+  --color-text-light: #666666;
+  --color-background: #ffffff;
+  --color-border: #e0e0e0;
+  --color-success: #28a745;
+  --color-warning: #ffc107;
+  --color-danger: #dc3545;
 }
 
-// Transition variables
-$transition-fast: 0.2s;
-$transition-base: 0.3s;
-$transition-slow: 0.5s;
-$transition-slower: 0.8s;
-
-// Easing functions
-$ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
-$ease-out: cubic-bezier(0, 0, 0.2, 1);
-$ease-in: cubic-bezier(0.4, 0, 1, 1);
-$ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
-
-// Z-index layers
-$z-index-modal: 1000;
-$z-index-overlay: 900;
-$z-index-dropdown: 800;
-$z-index-header: 700;
-
-// Breakpoints
-$breakpoints: (
-  'xs': 480px,
-  'sm': 768px,
-  'md': 1024px,
-  'lg': 1200px,
-  'xl': 1440px
-);
-
-// Mixins
-@mixin transition($properties: all, $duration: $transition-base, $easing: $ease-in-out) {
-  @if type-of($properties) == 'list' {
-    transition-property: $properties;
-    transition-duration: $duration;
-    transition-timing-function: $easing;
-  } @else {
-    transition: $properties $duration $easing;
-  }
+/* Base styles */
+body {
+  font-size: var(--font-size-medium);
+  line-height: 1.6;
+  color: var(--color-text);
+  background-color: var(--color-background);
+  transition: all 0.3s ease;
 }
 
-@mixin fade-in($duration: $transition-base) {
-  opacity: 0;
-  animation: fadeIn $duration $ease-in-out forwards;
-}
-
-@mixin slide-in($direction: 'up', $distance: 30px, $duration: $transition-base) {
-  opacity: 0;
-  transform: translateY(if($direction == 'up', $distance, -$distance));
-  animation: slideIn $duration $ease-out forwards;
+/* Font size classes */
+body.font-small {
+  font-size: var(--font-size-small);
   
-  @if $direction == 'left' {
-    transform: translateX($distance);
-  } @else if $direction == 'right' {
-    transform: translateX(-$distance);
-  }
+  h1 { font-size: 1.8rem; }
+  h2 { font-size: 1.5rem; }
+  h3 { font-size: 1.3rem; }
+  p, a, button, input, label { font-size: var(--font-size-small); }
 }
 
-@mixin scale-hover($scale: 1.05) {
-  @include transition(transform);
+body.font-medium {
+  font-size: var(--font-size-medium);
   
-  &:hover {
-    transform: scale($scale);
-  }
+  h1 { font-size: 2rem; }
+  h2 { font-size: 1.75rem; }
+  h3 { font-size: 1.5rem; }
 }
 
-@mixin stagger-children($delay-increment: 0.1s, $start-delay: 0s) {
-  @for $i from 1 through 10 {
-    &:nth-child(#{$i}) {
-      animation-delay: $start-delay + ($i - 1) * $delay-increment;
+body.font-large {
+  font-size: var(--font-size-large);
+  
+  h1 { font-size: 2.25rem; }
+  h2 { font-size: 2rem; }
+  h3 { font-size: 1.75rem; }
+  p, a, button, input, label { font-size: var(--font-size-large); }
+}
+
+body.font-xlarge {
+  font-size: var(--font-size-xlarge);
+  
+  h1 { font-size: 2.5rem; }
+  h2 { font-size: 2.25rem; }
+  h3 { font-size: 2rem; }
+  p, a, button, input, label { font-size: var(--font-size-xlarge); }
+}
+
+/* High Contrast Mode */
+body.high-contrast {
+  --color-primary: #000000;
+  --color-primary-dark: #000000;
+  --color-text: #000000;
+  --color-text-light: #000000;
+  --color-background: #ffffff;
+  --color-border: #000000;
+  --color-success: #000000;
+  --color-warning: #000000;
+  --color-danger: #000000;
+
+  /* Enhanced focus styles */
+  *:focus {
+    outline: 3px solid #000000 !important;
+    outline-offset: 2px !important;
+  }
+
+  /* Improved link visibility */
+  a {
+    text-decoration: underline;
+    font-weight: bold;
+    
+    &:hover, &:focus {
+      background-color: #ffff00;
+      color: #000000;
     }
   }
-}
 
-@mixin responsive($breakpoint) {
-  @if map-has-key($breakpoints, $breakpoint) {
-    @media (min-width: map-get($breakpoints, $breakpoint)) {
-      @content;
+  /* Enhanced button styles */
+  button, .btn-primary, .btn-secondary {
+    border: 2px solid #000000 !important;
+    font-weight: bold;
+    
+    &:hover, &:focus {
+      background-color: #000000 !important;
+      color: #ffffff !important;
     }
-  } @else {
-    @error "Breakpoint #{$breakpoint} not found in $breakpoints map";
+  }
+
+  /* Improved form elements */
+  input, select, textarea {
+    border: 2px solid #000000 !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    
+    &::placeholder {
+      color: #666666 !important;
+    }
+    
+    &:focus {
+      border-color: #000000 !important;
+      background: #ffff00 !important;
+    }
+  }
+
+  /* Enhanced navigation */
+  .navbar {
+    background: #ffffff !important;
+    border-bottom: 3px solid #000000 !important;
+    
+    .nav-link {
+      border: 1px solid transparent;
+      
+      &:hover, &:focus {
+        background: #000000 !important;
+        color: #ffffff !important;
+        border-color: #000000;
+      }
+    }
+  }
+
+  /* Improved cards and containers */
+  .card, .stat-card, .session-card {
+    border: 2px solid #000000 !important;
+    background: #ffffff !important;
+    
+    h1, h2, h3, h4, h5, h6, p, span {
+      color: #000000 !important;
+    }
+  }
+
+  /* Better contrast for disabled elements */
+  button:disabled, input:disabled {
+    opacity: 1;
+    background: #cccccc !important;
+    color: #666666 !important;
+    border-color: #999999 !important;
   }
 }
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/* Reduced Motion */
+body.reduced-motion {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Enhanced focus styles for all modes */
+button:focus, a:focus, input:focus, select:focus, textarea:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Skip to main content link */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: #000000;
+  color: #ffffff;
+  padding: 8px;
+  text-decoration: none;
+  border-radius: 0 0 4px 4px;
+  z-index: 10000;
+  
+  &:focus {
+    top: 0;
+  }
+}
+
+/* High contrast skip link */
+body.high-contrast .skip-link {
+  background: #ffff00;
+  color: #000000;
+  font-weight: bold;
+  border: 2px solid #000000;
+}

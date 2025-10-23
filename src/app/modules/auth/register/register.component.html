@@ -1,125 +1,197 @@
 <div class="register-container">
   <div class="register-card">
-    <h2>Create Your Account</h2>
-    
-    <mat-tab-group (selectedTabChange)="onTabChange($event.index)">
-      <!-- Client Registration Tab -->
-      <mat-tab label="Client">
-        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
-          <div class="form-row">
-            <mat-form-field appearance="outline">
-              <mat-label>First Name</mat-label>
-              <input matInput formControlName="firstName" required>
-              <mat-error *ngIf="registerForm.get('firstName')?.hasError('required')">
-                First name is required
-              </mat-error>
-            </mat-form-field>
+    <!-- Header -->
+    <div class="register-header">
+      <a routerLink="/" class="back-home">
+        ← Back to Home
+      </a>
+      <h1>Join MindBridge</h1>
+      <p>Create your account and start your journey</p>
+    </div>
 
-            <mat-form-field appearance="outline">
-              <mat-label>Last Name</mat-label>
-              <input matInput formControlName="lastName" required>
-              <mat-error *ngIf="registerForm.get('lastName')?.hasError('required')">
-                Last name is required
-              </mat-error>
-            </mat-form-field>
-          </div>
+    <!-- Demo Registration Buttons -->
+    <div class="demo-buttons">
+      <p class="demo-label">Quick Demo Access:</p>
+      <div class="demo-buttons-grid">
+        <button (click)="demoRegistration('client')" class="btn demo-btn client-demo" [disabled]="isLoading">
+          👤 Client Demo
+        </button>
+        <button (click)="demoRegistration('expert')" class="btn demo-btn expert-demo" [disabled]="isLoading">
+          💼 Expert Demo
+        </button>
+      </div>
+    </div>
 
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Email</mat-label>
-            <input matInput formControlName="email" type="email" required>
-            <mat-error *ngIf="registerForm.get('email')?.hasError('required')">
-              Email is required
-            </mat-error>
-            <mat-error *ngIf="registerForm.get('email')?.hasError('email')">
-              Please enter a valid email
-            </mat-error>
-          </mat-form-field>
+    <div class="divider">
+      <span>OR</span>
+    </div>
 
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Password</mat-label>
-            <input matInput formControlName="password" type="password" required>
-            <mat-error *ngIf="registerForm.get('password')?.hasError('required')">
-              Password is required
-            </mat-error>
-            <mat-error *ngIf="registerForm.get('password')?.hasError('minlength')">
-              Password must be at least 6 characters
-            </mat-error>
-          </mat-form-field>
-
-          <button 
-            mat-raised-button 
-            color="primary" 
-            type="submit" 
-            class="full-width"
-            [disabled]="!registerForm.valid || isLoading"
-          >
-            {{ isLoading ? 'Creating Account...' : 'Create Client Account' }}
-          </button>
-        </form>
-      </mat-tab>
-
-      <!-- Expert Registration Tab -->
-      <mat-tab label="Expert">
-        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
-          <div class="form-row">
-            <mat-form-field appearance="outline">
-              <mat-label>First Name</mat-label>
-              <input matInput formControlName="firstName" required>
-              <mat-error *ngIf="registerForm.get('firstName')?.hasError('required')">
-                First name is required
-              </mat-error>
-            </mat-form-field>
-
-            <mat-form-field appearance="outline">
-              <mat-label>Last Name</mat-label>
-              <input matInput formControlName="lastName" required>
-              <mat-error *ngIf="registerForm.get('lastName')?.hasError('required')">
-                Last name is required
-              </mat-error>
-            </mat-form-field>
-          </div>
-
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Email</mat-label>
-            <input matInput formControlName="email" type="email" required>
-            <mat-error *ngIf="registerForm.get('email')?.hasError('required')">
-              Email is required
-            </mat-error>
-            <mat-error *ngIf="registerForm.get('email')?.hasError('email')">
-              Please enter a valid email
-            </mat-error>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Password</mat-label>
-            <input matInput formControlName="password" type="password" required>
-            <mat-error *ngIf="registerForm.get('password')?.hasError('required')">
-              Password is required
-            </mat-error>
-            <mat-error *ngIf="registerForm.get('password')?.hasError('minlength')">
-              Password must be at least 6 characters
-            </mat-error>
-          </mat-form-field>
-
-          <button 
-            mat-raised-button 
-            color="primary" 
-            type="submit" 
-            class="full-width"
-            [disabled]="!registerForm.valid || isLoading"
-          >
-            {{ isLoading ? 'Creating Account...' : 'Create Expert Account' }}
-          </button>
-        </form>
-      </mat-tab>
-    </mat-tab-group>
-
-    <div *ngIf="errorMessage" class="error-message">
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="alert alert-error">
       {{ errorMessage }}
     </div>
 
+    <!-- Registration Form -->
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
+      <!-- Name Fields -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="firstName" class="form-label">First Name</label>
+          <input
+            id="firstName"
+            type="text"
+            formControlName="firstName"
+            [class.error]="formControls['firstName'].touched && formControls['firstName'].errors"
+            placeholder="Enter your first name"
+            class="form-input">
+          <div *ngIf="formControls['firstName'].touched && formControls['firstName'].errors" class="error-message">
+            {{ getFirstNameError() }}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="lastName" class="form-label">Last Name</label>
+          <input
+            id="lastName"
+            type="text"
+            formControlName="lastName"
+            [class.error]="formControls['lastName'].touched && formControls['lastName'].errors"
+            placeholder="Enter your last name"
+            class="form-input">
+          <div *ngIf="formControls['lastName'].touched && formControls['lastName'].errors" class="error-message">
+            {{ getLastNameError() }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="form-group">
+        <label for="email" class="form-label">Email Address</label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          [class.error]="formControls['email'].touched && formControls['email'].errors"
+          placeholder="Enter your email"
+          class="form-input">
+        <div *ngIf="formControls['email'].touched && formControls['email'].errors" class="error-message">
+          {{ getEmailError() }}
+        </div>
+      </div>
+
+      <!-- Phone -->
+      <div class="form-group">
+        <label for="phone" class="form-label">Phone Number (Optional)</label>
+        <input
+          id="phone"
+          type="tel"
+          formControlName="phone"
+          placeholder="Enter your phone number"
+          class="form-input">
+      </div>
+
+      <!-- Role Selection -->
+      <div class="form-group">
+        <label class="form-label">I want to join as:</label>
+        <div class="role-selection">
+          <label class="role-option">
+            <input type="radio" formControlName="role" value="client" class="radio">
+            <div class="role-card">
+              <div class="role-icon">👤</div>
+              <div class="role-info">
+                <h4>Client</h4>
+                <p>Book sessions with experts to achieve your goals</p>
+              </div>
+            </div>
+          </label>
+
+          <label class="role-option">
+            <input type="radio" formControlName="role" value="expert" class="radio">
+            <div class="role-card">
+              <div class="role-icon">💼</div>
+              <div class="role-info">
+                <h4>Expert</h4>
+                <p>Share your knowledge and guide clients</p>
+              </div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Password Fields -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="password" class="form-label">Password</label>
+          <div class="password-input-container">
+            <input
+              id="password"
+              [type]="showPassword ? 'text' : 'password'"
+              formControlName="password"
+              [class.error]="formControls['password'].touched && formControls['password'].errors"
+              placeholder="Create a password"
+              class="form-input password-input">
+            <button
+              type="button"
+              (click)="togglePasswordVisibility('password')"
+              class="password-toggle"
+              tabindex="-1">
+              {{ showPassword ? '🙈' : '👁️' }}
+            </button>
+          </div>
+          <div *ngIf="formControls['password'].touched && formControls['password'].errors" class="error-message">
+            {{ getPasswordError() }}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="confirmPassword" class="form-label">Confirm Password</label>
+          <div class="password-input-container">
+            <input
+              id="confirmPassword"
+              [type]="showConfirmPassword ? 'text' : 'password'"
+              formControlName="confirmPassword"
+              [class.error]="formControls['confirmPassword'].touched && formControls['confirmPassword'].errors"
+              placeholder="Confirm your password"
+              class="form-input password-input">
+            <button
+              type="button"
+              (click)="togglePasswordVisibility('confirmPassword')"
+              class="password-toggle"
+              tabindex="-1">
+              {{ showConfirmPassword ? '🙈' : '👁️' }}
+            </button>
+          </div>
+          <div *ngIf="formControls['confirmPassword'].touched && formControls['confirmPassword'].errors" class="error-message">
+            {{ getConfirmPasswordError() }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Terms Agreement -->
+      <div class="form-group">
+        <label class="checkbox-label terms-checkbox">
+          <input type="checkbox" formControlName="agreeToTerms" class="checkbox">
+          <span class="checkmark"></span>
+          I agree to the <a href="#" class="link">Terms of Service</a> and <a href="#" class="link">Privacy Policy</a>
+        </label>
+        <div *ngIf="formControls['agreeToTerms'].touched && formControls['agreeToTerms'].errors" class="error-message">
+          You must agree to the terms and conditions
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button
+        type="submit"
+        class="btn btn-primary register-btn"
+        [disabled]="isLoading || registerForm.invalid">
+        <span *ngIf="isLoading" class="loading-spinner"></span>
+        {{ isLoading ? 'Creating Account...' : 'Create Account' }}
+      </button>
+    </form>
+
+    <!-- Login Link -->
     <div class="login-link">
-      Already have an account? <a routerLink="/auth/login">Sign in</a>
+      <p>Already have an account? <a routerLink="/auth/login" class="link">Sign in here</a></p>
     </div>
   </div>
 </div>

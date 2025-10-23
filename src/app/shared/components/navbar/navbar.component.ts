@@ -1,63 +1,60 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
-
-// Material imports
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatMenuModule } from '@angular/material/menu';
-
-// Services
+import { Router, RouterModule, NavigationEnd } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
-import { AccessibilityService } from '../../../core/services/accessibility.service';
-import { AccessibilityToggleComponent } from '../accessibility-toggle/accessibility-toggle.component';
+import { User } from '../../../core/models/user.model';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatIconModule,
-    MatMenuModule,
-    AccessibilityToggleComponent,
-  ],
+  imports: [CommonModule, RouterModule],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent implements OnInit {
-  currentUser: any = null;
+  currentUser: User | null = null;
   isMenuOpen = false;
+  currentRoute = '';
 
   constructor(
-    public authService: AuthService,
-    public accessibilityService: AccessibilityService,
+    private authService: AuthService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
+    // Subscribe to current user
     this.authService.currentUser$.subscribe(user => {
       this.currentUser = user;
     });
-  }
 
-  logout(): void {
-    this.authService.logout();
-    this.router.navigate(['/']);
-  }
-
-  navigateToDashboard(): void {
-    if (this.currentUser?.role === 'client') {
-      this.router.navigate(['/client/dashboard']);
-    } else if (this.currentUser?.role === 'expert') {
-      this.router.navigate(['/expert/dashboard']);
-    }
+    // Track current route for active links
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.currentRoute = event.urlAfterRedirects;
+      }
+    });
   }
 
   toggleMenu(): void {
     this.isMenuOpen = !this.isMenuOpen;
+  }
+
+  closeMenu(): void {
+    this.isMenuOpen = false;
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/auth/login']);
+    this.closeMenu();
+  }
+
+  isActiveRoute(route: string): boolean {
+    return this.currentRoute.startsWith(route);
+  }
+
+  getUserInitials(): string {
+    if (!this.currentUser) return 'U';
+    return (this.currentUser.firstName.charAt(0) + this.currentUser.lastName.charAt(0)).toUpperCase();
   }
 }
